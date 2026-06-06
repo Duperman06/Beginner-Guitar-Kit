@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kit du Grand Débutant 🎸</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #f7f6f3;
+  --surface: #ffffff;
+  --border:  #e5e3de;
+  --text:    #1a1a1a;
+  --muted:   #6b6b6b;
+  --accent:  #1d3a2f;
+  --green:   #86efac;
+  --red:     #fca5a5;
+  --orange:  #fdba74;
+  --blue:    #93c5fd;
+  --radius:  12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── ACCUEIL ── */
+#page-home { max-width: 700px; margin: 0 auto; padding: 60px 24px 40px; }
+.home-logo  { font-family:'DM Serif Display',serif; font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+.home-title { font-family:'DM Serif Display',serif; font-size:clamp(36px,6vw,56px); line-height:1.1; margin-bottom:16px; color:var(--accent); }
+.home-sub   { font-size:16px; color:var(--muted); margin-bottom:52px; line-height:1.6; }
+.module-list  { display:flex; flex-direction:column; gap:16px; }
+.module-card  { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:28px 32px; cursor:pointer; display:flex; align-items:center; gap:24px; transition:border-color .2s,box-shadow .2s,transform .15s; text-align:left; }
+.module-card:hover { border-color:var(--accent); box-shadow:0 4px 20px rgba(0,0,0,.07); transform:translateY(-2px); }
+.module-icon  { font-size:32px; flex-shrink:0; width:52px; text-align:center; }
+.module-info  { flex:1; }
+.module-title { font-family:'DM Serif Display',serif; font-size:20px; margin-bottom:4px; color:var(--accent); }
+.module-desc  { font-size:14px; color:var(--muted); line-height:1.5; }
+.module-arrow { font-size:20px; color:var(--border); flex-shrink:0; }
+
+/* ── SÉLECTEUR DE LANGUE ── */
+.lang-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px 4px;
+}
+.lang-btn {
+  padding: 10px 32px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--muted);
+  transition: all .15s;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+.lang-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* ── PAGES INTERNES ── */
+.page-inner { display:none; max-width:1300px; margin:0 auto; padding:32px 24px 60px; }
+.page-inner.active { display:block; }
+.back-btn { display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; margin-bottom:28px; background:none; border:none; padding:0; transition:color .15s; font-family:'DM Sans',sans-serif; }
+.back-btn:hover { color:var(--accent); }
+.page-title    { font-family:'DM Serif Display',serif; font-size:32px; color:var(--accent); margin-bottom:6px; }
+.page-subtitle { font-size:14px; color:var(--muted); margin-bottom:28px; }
+
+/* ── PANEL ── */
+.panel { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+.panel-label { font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+
+/* ── BANNIÈRE MODE ── */
+.mode-banner {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: #f0f4f1;
+  border: 1.5px solid #c5d5cb;
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 24px;
+}
+.mode-banner-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.mode-banner-body { font-size: 13.5px; line-height: 1.6; color: #2d4a3e; }
+.mode-banner-body strong { font-weight: 700; color: var(--accent); }
+
+/* ── TOGGLE ALTÉRATION ── */
+.alt-toggle { display:inline-flex; border:1.5px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:14px; }
+.alt-btn { padding:5px 16px; font-size:13px; font-weight:700; cursor:pointer; background:var(--bg); border:none; color:var(--muted); font-family:'DM Sans',sans-serif; transition:background .15s,color .15s; user-select:none; }
+.alt-btn.active { background:var(--accent); color:white; }
+
+/* ── PILLS ── */
+.pills { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px; }
+.pill { padding:6px 16px; border-radius:20px; border:1.5px solid var(--border); background:var(--bg); font-weight:600; font-size:14px; cursor:pointer; user-select:none; transition:all .15s; color:var(--text); font-family:'DM Sans',sans-serif; }
+.pill:hover { border-color:var(--accent); }
+.pill.active { background:var(--accent); border-color:var(--accent); color:white; }
+.pill.mode-pill { border-radius:8px; font-size:13px; }
+
+/* ── BOUTONS ── */
+.btn-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; align-items:center; }
+.btn { padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600; font-family:'DM Sans',sans-serif; transition:opacity .15s,transform .1s; }
+.btn:hover:not(:disabled) { opacity:.88; transform:translateY(-1px); }
+.btn:disabled { opacity:.38; cursor:not-allowed; }
+.btn-primary { background:var(--accent); color:white; }
+.btn-gray    { background:#e5e3de; color:var(--text); }
+.btn-quiz    { background:#7c3aed; color:white; }
+.btn-stop    { background:#1a1a1a; color:white; }
+
+/* ── SCORES ── */
+.score-row { display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; min-height:28px; align-items:center; }
+.score-badge { display:none; align-items:center; gap:7px; font-weight:700; font-size:15px; }
+.score-badge.show { display:inline-flex; }
+.score-dot { width:16px; height:16px; border-radius:4px; flex-shrink:0; }
+.dot-green  { background:#22c55e; }
+.dot-red    { background:#ef4444; }
+.dot-orange { background:#f97316; }
+.score-msg  { font-size:15px; font-weight:700; color:var(--text); min-height:1.5em; margin-top:6px; }
+.quiz-info  { font-size:13px; font-weight:600; color:#7c3aed; min-height:1.3em; margin-top:4px; }
+.timer-txt  { font-size:13px; color:var(--muted); margin-top:6px; }
+
+/* ── GAMME CORRECTE ── */
+.scale-notes { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+.scale-note-tag { background:var(--accent); color:white; border-radius:6px; padding:3px 10px; font-size:13px; font-weight:700; }
+
+/* ── FILTRES FRETTES + CORDES (module 3) ── */
+.filter-grid { display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start; }
+.filter-group { display:flex; flex-direction:column; gap:8px; }
+.filter-group-label { font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
+.fret-inputs { display:flex; align-items:center; gap:10px; }
+.fret-inputs label { font-size:13px; color:var(--muted); font-weight:600; }
+.fret-input { width:52px; padding:6px 8px; border:1.5px solid var(--border); border-radius:8px; font-size:14px; font-weight:700; font-family:'DM Sans',sans-serif; text-align:center; color:var(--text); background:var(--bg); }
+.fret-input:focus { outline:none; border-color:var(--accent); }
+.fret-sep { font-size:16px; color:var(--muted); font-weight:600; }
+.fret-hint { font-size:12px; color:var(--muted); margin-top:2px; }
+
+/* pastilles cordes (numérotées 1-6) */
+.string-pills { display:flex; gap:6px; }
+.string-pill { width:36px; height:36px; border-radius:50%; border:1.5px solid var(--border); background:var(--bg); font-weight:700; font-size:14px; cursor:pointer; user-select:none; transition:all .15s; color:var(--text); font-family:'DM Sans',sans-serif; display:flex; align-items:center; justify-content:center; }
+.string-pill:hover { border-color:var(--accent); }
+.string-pill.active { background:var(--accent); border-color:var(--accent); color:white; }
+
+/* ── MANCHE ── */
+.board-wrap { overflow-x:visible; padding-bottom:8px; }
+.board { display:grid; gap:2px; background:#2a2a2a; padding:6px; width:100%; border-radius:8px; }
+.gcell,.gheader,.gstring { height:40px; display:flex; justify-content:center; align-items:center; font-size:11px; background:white; }
+.gheader { background:#ddd; height:26px; font-weight:700; font-size:11px; border-radius:3px; }
+.gstring { background:#ddd; font-weight:700; font-size:13px; border-radius:3px; width:40px; }
+.gcell { cursor:pointer; border-radius:3px; transition:background .1s; font-size:11px; font-weight:600; position:relative; overflow:visible; }
+.gcell.selected { background:var(--blue); }
+.gcell.correct  { background:var(--green); }
+.gcell.wrong    { background:var(--red); }
+.gcell.missed   { background:var(--orange); }
+.gcell.locked   { cursor:default; }
+.gcell.out-of-range { opacity:.18; cursor:default; pointer-events:none; }
+
+/* Note qui sonne */
+.note-ring {
+  position:absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.6);
+  background: var(--accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  padding: 3px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  animation: ring-in-out 1.4s ease forwards;
+}
+.note-ring.wrong-ring {
+  background: #ef4444;
+}
+@keyframes ring-in-out {
+  0%   { opacity:0; transform:translateX(-50%) scale(0.7) translateY(4px); }
+  15%  { opacity:1; transform:translateX(-50%) scale(1)   translateY(0px); }
+  60%  { opacity:1; transform:translateX(-50%) scale(1)   translateY(0px); }
+  100% { opacity:0; transform:translateX(-50%) scale(0.9) translateY(-6px); }
+}
+
+/* Étiquette permanente affichée en fin de quiz */
+.note-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: 'DM Sans', sans-serif;
+  color: rgba(0,0,0,0.55);
+  pointer-events: none;
+  animation: label-appear 0.25s ease forwards;
+}
+.note-label.note-label-wrong { color: rgba(120,0,0,0.7); }
+@keyframes label-appear {
+  from { opacity:0; transform:scale(0.7); }
+  to   { opacity:1; transform:scale(1); }
+}
+</style>
+</head>
+<body>
+
+<div class="lang-bar">
+  <span class="lang-btn active" onclick="setLang('fr',this)"><img src="https://flagcdn.com/24x18/fr.png" width="24" height="18" alt="FR" style="border-radius:2px;vertical-align:middle"> Français</span>
+  <span class="lang-btn"        onclick="setLang('en',this)"><img src="https://flagcdn.com/24x18/gb.png" width="24" height="18" alt="EN" style="border-radius:2px;vertical-align:middle"> English</span>
+</div>
+
+<!-- ══ ACCUEIL ══ -->
+<div id="page-home">
+  <p class="home-logo" data-i18n="logo">🎸 Guitare</p>
+  <h1 class="home-title" data-i18n="home_title">Kit du Grand<br>Débutant</h1>
+  <p class="home-sub" data-i18n="home_sub">Trois outils pour apprendre à votre rythme,<br>pas à pas, sans se perdre.</p>
+  <div class="module-list">
+    <div class="module-card" onclick="goTo('gammes')">
+      <div class="module-icon">🎼</div>
+      <div class="module-info">
+        <div class="module-title" data-i18n="mod1_title">Travailler ses gammes</div>
+        <div class="module-desc" data-i18n="mod1_desc">Choisissez une gamme, majeure ou mineure, et retrouvez ses notes parmi les 12.</div>
+      </div>
+      <div class="module-arrow">→</div>
+    </div>
+    <div class="module-card" onclick="goTo('manche')">
+      <div class="module-icon">🎸</div>
+      <div class="module-info">
+        <div class="module-title" data-i18n="mod2_title">Apprendre le manche de guitare</div>
+        <div class="module-desc" data-i18n="mod2_desc">Sélectionnez des notes cibles et retrouvez-les sur tout le manche, avec quiz chronométré.</div>
+      </div>
+      <div class="module-arrow">→</div>
+    </div>
+    <div class="module-card" onclick="goTo('gammes-manche')">
+      <div class="module-icon">🗺️</div>
+      <div class="module-info">
+        <div class="module-title" data-i18n="mod3_title">Gamme sur le manche de guitare</div>
+        <div class="module-desc" data-i18n="mod3_desc">Choisissez une gamme et placez toutes ses occurrences sur le manche — en mode libre ou quiz.</div>
+      </div>
+      <div class="module-arrow">→</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODULE 1 — GAMMES ══ -->
+<div id="page-gammes" class="page-inner">
+  <button class="back-btn" onclick="goTo('home')" data-i18n="back">← Accueil</button>
+  <h2 class="page-title" data-i18n="mod1_title">Travailler ses gammes</h2>
+  <p class="page-subtitle" data-i18n="mod1_sub">Choisissez une tonique et un mode, puis cochez les notes de la gamme.</p>
+
+  <div class="mode-banner">
+    <span class="mode-banner-icon">💡</span>
+    <div class="mode-banner-body">
+      <span data-i18n="banner_html"><strong>Mode libre</strong> — Prenez le temps de réfléchir, modifiez vos choix à volonté, puis validez votre réponse avec <strong>Corriger</strong>. Pour un défi en temps réel sans filet, activez le <strong>Quiz</strong> : chaque clic est immédiatement évalué.</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label" data-i18n="label_alt">Altération</div>
+    <div class="alt-toggle">
+      <span class="alt-btn active" onclick="gSetAlt('sharp',this)" data-i18n="sharp"># Dièses</span>
+      <span class="alt-btn"        onclick="gSetAlt('flat',this)" data-i18n="flat">♭ Bémols</span>
+    </div>
+    <div class="panel-label" style="margin-top:12px" data-i18n="label_root">Tonique</div>
+    <div class="pills" id="g-roots"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label" data-i18n="label_mode">Mode</div>
+    <div class="pills" id="g-mode">
+      <span class="pill mode-pill active" data-mode="major"       onclick="selectMode(this)" data-i18n="scale_major">Majeure</span>
+      <span class="pill mode-pill"        data-mode="minor"       onclick="selectMode(this)" data-i18n="scale_minor">Mineure naturelle</span>
+      <span class="pill mode-pill"        data-mode="penta_major" onclick="selectMode(this)" data-i18n="scale_penta_maj">Pentatonique majeure</span>
+      <span class="pill mode-pill"        data-mode="penta_minor" onclick="selectMode(this)" data-i18n="scale_penta_min">Pentatonique mineure</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label" data-i18n="label_answers">Votre réponse — cochez les notes de la gamme</div>
+    <div class="pills" id="g-answers"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="g-btn-corriger" onclick="gCorrect()" data-i18n="btn_correct">Corriger</button>
+      <button class="btn btn-gray"    id="g-btn-reset"    onclick="gReset()" data-i18n="btn_reset">Reset</button>
+      <button class="btn btn-quiz"    id="g-btn-quiz"     onclick="gStartQuiz()" data-i18n="btn_quiz">Quiz</button>
+      <button class="btn btn-stop"    id="g-btn-stop"     onclick="gStopQuizManual()" style="display:none" data-i18n="btn_stop">⏹ Arrêter &amp; corriger</button>
+    </div>
+    <div class="score-row">
+      <span class="score-badge" id="g-badge-ok">  <span class="score-dot dot-green"></span><span id="g-cnt-ok">0</span></span>
+      <span class="score-badge" id="g-badge-bad"> <span class="score-dot dot-red"></span>  <span id="g-cnt-bad">0</span></span>
+      <span class="score-badge" id="g-badge-miss"><span class="score-dot dot-orange"></span><span id="g-cnt-miss">0</span></span>
+    </div>
+    <div class="score-msg" id="g-score-msg"></div>
+    <div class="quiz-info" id="g-quiz-info"></div>
+    <div class="timer-txt" id="g-timer"></div>
+  </div>
+
+  <div class="panel" id="g-result-panel" style="display:none">
+    <div class="panel-label" data-i18n="label_correct_scale">Gamme correcte</div>
+    <div class="scale-notes" id="g-correct-notes"></div>
+  </div>
+</div>
+
+<!-- ══ MODULE 2 — MANCHE ══ -->
+<div id="page-manche" class="page-inner">
+  <button class="back-btn" onclick="goTo('home')" data-i18n="back">← Accueil</button>
+  <h2 class="page-title" data-i18n="mod2_title">Apprendre le manche de guitare</h2>
+  <p class="page-subtitle" data-i18n="mod2_sub">Sélectionnez les notes cibles, puis trouvez-les sur le manche de guitare.</p>
+
+  <div class="mode-banner">
+    <span class="mode-banner-icon">💡</span>
+    <div class="mode-banner-body">
+      <span data-i18n="banner_html"><strong>Mode libre</strong> — Prenez le temps de réfléchir, modifiez vos choix à volonté, puis validez votre réponse avec <strong>Corriger</strong>. Pour un défi en temps réel sans filet, activez le <strong>Quiz</strong> : chaque clic est immédiatement évalué.</span>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-label" data-i18n="label_notes_work">Notes à travailler</div>
+    <div class="pills" id="m-notes"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label" data-i18n="label_zone">Zone de travail</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">
+      <span data-i18n="zone_desc">Concentrez-vous sur une portion précise du manche en limitant la plage de frettes et en choisissant les cordes à travailler. Idéal pour progresser zone par zone plutôt que sur tout le manche d'un coup.</span>
+    </p>
+    <div class="filter-grid">
+      <div class="filter-group">
+        <span class="filter-group-label" data-i18n="label_frets">Frettes</span>
+        <div class="fret-inputs">
+          <label data-i18n="fret_from">De</label>
+          <input class="fret-input" type="number" id="m-fret-min" min="1" max="22" value="1"  onfocus="this.select()" onblur="mUpdateRange()" onkeydown="if(event.key==='Enter')this.blur()">
+          <span class="fret-sep">→</span>
+          <label data-i18n="fret_to">à</label>
+          <input class="fret-input" type="number" id="m-fret-max" min="1" max="22" value="22" onfocus="this.select()" onblur="mUpdateRange()" onkeydown="if(event.key==='Enter')this.blur()">
+        </div>
+        <span class="fret-hint" data-i18n="fret_hint">Frettes 1 à 22</span>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label" data-i18n="label_strings">Cordes (1 = Mi aigu · 6 = Mi grave)</span>
+        <div class="string-pills" id="m-string-pills"></div>
+        <span class="fret-hint" data-i18n="strings_hint">Toutes les cordes actives par défaut</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="btn-row">
+      <button class="btn btn-primary" id="m-btn-corriger" onclick="mCorrect()" data-i18n="btn_correct">Corriger</button>
+      <button class="btn btn-gray"    id="m-btn-reset"    onclick="mReset()" data-i18n="btn_reset">Reset</button>
+      <button class="btn btn-quiz"    id="m-btn-quiz"     onclick="mStartQuiz()" data-i18n="btn_quiz">Quiz</button>
+      <button class="btn btn-stop"    id="m-btn-stop"     onclick="mStopQuizManual()" style="display:none" data-i18n="btn_stop">⏹ Arrêter & corriger</button>
+    </div>
+    <div class="score-row">
+      <span class="score-badge" id="m-badge-ok">  <span class="score-dot dot-green"></span><span id="m-cnt-ok">0</span></span>
+      <span class="score-badge" id="m-badge-bad"> <span class="score-dot dot-red"></span>  <span id="m-cnt-bad">0</span></span>
+      <span class="score-badge" id="m-badge-miss"><span class="score-dot dot-orange"></span><span id="m-cnt-miss">0</span></span>
+    </div>
+    <div class="score-msg" id="m-score-msg"></div>
+    <div class="quiz-info" id="m-quiz-info"></div>
+    <div class="timer-txt" id="m-timer" data-i18n="timer_zero">Temps : 0s</div>
+  </div>
+  <div class="board-wrap"><div class="board" id="m-board"></div></div>
+</div>
+
+<!-- ══ MODULE 3 — GAMMES SUR LE MANCHE ══ -->
+<div id="page-gammes-manche" class="page-inner">
+  <button class="back-btn" onclick="goTo('home')" data-i18n="back">← Accueil</button>
+  <h2 class="page-title" data-i18n="mod3_title">Gamme sur le manche de guitare</h2>
+  <p class="page-subtitle" data-i18n="mod3_sub">Choisissez une gamme et placez toutes ses notes sur le manche.</p>
+
+  <div class="mode-banner">
+    <span class="mode-banner-icon">💡</span>
+    <div class="mode-banner-body">
+      <span data-i18n="banner_html"><strong>Mode libre</strong> — Prenez le temps de réfléchir, modifiez vos choix à volonté, puis validez votre réponse avec <strong>Corriger</strong>. Pour un défi en temps réel sans filet, activez le <strong>Quiz</strong> : chaque clic est immédiatement évalué.</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label" data-i18n="label_alt">Altération</div>
+    <div class="alt-toggle">
+      <span class="alt-btn active" onclick="gmSetAlt('sharp',this)" data-i18n="sharp"># Dièses</span>
+      <span class="alt-btn"        onclick="gmSetAlt('flat',this)" data-i18n="flat">♭ Bémols</span>
+    </div>
+    <div class="panel-label" style="margin-top:12px" data-i18n="label_root">Tonique</div>
+    <div class="pills" id="gm-roots"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label" data-i18n="label_mode">Mode</div>
+    <div class="pills" id="gm-mode">
+      <span class="pill mode-pill active" data-mode="major"       onclick="gmSelectMode(this)" data-i18n="scale_major">Majeure</span>
+      <span class="pill mode-pill"        data-mode="minor"       onclick="gmSelectMode(this)" data-i18n="scale_minor">Mineure naturelle</span>
+      <span class="pill mode-pill"        data-mode="penta_major" onclick="gmSelectMode(this)" data-i18n="scale_penta_maj">Pentatonique majeure</span>
+      <span class="pill mode-pill"        data-mode="penta_minor" onclick="gmSelectMode(this)" data-i18n="scale_penta_min">Pentatonique mineure</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label" data-i18n="label_zone">Zone de travail</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">
+      <span data-i18n="zone_desc">Concentrez-vous sur une portion précise du manche en limitant la plage de frettes et en choisissant les cordes à travailler. Idéal pour progresser zone par zone plutôt que sur tout le manche d'un coup.</span>
+    </p>
+    <div class="filter-grid">
+
+      <div class="filter-group">
+        <span class="filter-group-label" data-i18n="label_frets">Frettes</span>
+        <div class="fret-inputs">
+          <label data-i18n="fret_from">De</label>
+          <input class="fret-input" type="number" id="gm-fret-min" min="1" max="22" value="1"  onfocus="this.select()" onblur="gmUpdateRange()" onkeydown="if(event.key==='Enter')this.blur()">
+          <span class="fret-sep">→</span>
+          <label data-i18n="fret_to">à</label>
+          <input class="fret-input" type="number" id="gm-fret-max" min="1" max="22" value="22" onfocus="this.select()" onblur="gmUpdateRange()" onkeydown="if(event.key==='Enter')this.blur()">
+        </div>
+        <span class="fret-hint" data-i18n="fret_hint">Frettes 1 à 22</span>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-label" data-i18n="label_strings">Cordes (1 = Mi aigu · 6 = Mi grave)</span>
+        <div class="string-pills" id="gm-string-pills"></div>
+        <span class="fret-hint" data-i18n="strings_hint">Toutes les cordes actives par défaut</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="btn-row">
+      <button class="btn btn-primary" id="gm-btn-corriger" onclick="gmCorrect()" data-i18n="btn_correct">Corriger</button>
+      <button class="btn btn-gray"    id="gm-btn-reset"    onclick="gmReset()" data-i18n="btn_reset">Reset</button>
+      <button class="btn btn-quiz"    id="gm-btn-quiz"     onclick="gmStartQuiz()" data-i18n="btn_quiz">Quiz</button>
+      <button class="btn btn-stop"    id="gm-btn-stop"     onclick="gmStopQuizManual()" style="display:none" data-i18n="btn_stop">⏹ Arrêter & corriger</button>
+    </div>
+    <div class="score-row">
+      <span class="score-badge" id="gm-badge-ok">  <span class="score-dot dot-green"></span><span id="gm-cnt-ok">0</span></span>
+      <span class="score-badge" id="gm-badge-bad"> <span class="score-dot dot-red"></span>  <span id="gm-cnt-bad">0</span></span>
+      <span class="score-badge" id="gm-badge-miss"><span class="score-dot dot-orange"></span><span id="gm-cnt-miss">0</span></span>
+    </div>
+    <div class="score-msg" id="gm-score-msg"></div>
+    <div class="quiz-info" id="gm-quiz-info"></div>
+    <div class="timer-txt" id="gm-timer" data-i18n="timer_zero">Temps : 0s</div>
+  </div>
+
+  <div class="board-wrap"><div class="board" id="gm-board"></div></div>
+</div>
+
+<script>
+/* ══════════════════════════
+   DONNÉES MUSICALES
+══════════════════════════ */
+const NOTES_SHARP = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const NOTES_FLAT  = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
+// Cordes de la 1 (Mi aigu) à la 6 (Mi grave) — ordre d'affichage sur le manche
+const STRINGS     = ["E","B","G","D","A","E"]; // index 0 = corde 1 (Mi aigu)
+const FRETS       = 22;
+
+const SCALES = {
+  major:       [0,2,4,5,7,9,11],
+  minor:       [0,2,3,5,7,8,10],
+  penta_major: [0,2,4,7,9],
+  penta_minor: [0,3,5,7,10],
+};
+
+// Renvoie 12 entrées {display, chromatic}.
+// En mode flat : les altérées n'affichent QUE le bémol.
+function getNoteList(alt) {
+  return NOTES_SHARP.map((ns, i) => {
+    const isAccidental = ns.includes('#');
+    if (!isAccidental) return { display: ns, chromatic: i };
+    if (alt === 'sharp') return { display: ns, chromatic: i };
+    return { display: NOTES_FLAT[i], chromatic: i }; // bémol seul
+  });
+}
+
+function getScaleChromatic(rootChr, mode) {
+  return SCALES[mode].map(iv => (rootChr + iv) % 12);
+}
+
+function chromaticAt(openNote, fret) {
+  return (NOTES_SHARP.indexOf(openNote) + fret) % 12;
+}
+
+/* ══════════════════════════
+   NAVIGATION
+══════════════════════════ */
+function goTo(id) {
+  // Réinitialiser le module actif avant de quitter
+  if (id === 'home') {
+    if (document.getElementById('page-gammes').classList.contains('active'))        gFullReset();
+    if (document.getElementById('page-manche').classList.contains('active'))        mFullReset();
+    if (document.getElementById('page-gammes-manche').classList.contains('active')) gmFullReset();
+  }
+  document.getElementById('page-home').style.display = 'none';
+  ['gammes','manche','gammes-manche'].forEach(p =>
+    document.getElementById('page-' + p).classList.remove('active'));
+  if (id === 'home') document.getElementById('page-home').style.display = 'block';
+  else               document.getElementById('page-' + id).classList.add('active');
+}
+
+/* ══════════════════════════
+   UTILITAIRES COMMUNES
+══════════════════════════ */
+function setBadge(id, cntId, val) {
+  document.getElementById(cntId).textContent = val;
+  document.getElementById(id).classList.toggle('show', val > 0);
+}
+function hideBadges(px) {
+  ['ok','bad','miss'].forEach(k =>
+    document.getElementById(`${px}-badge-${k}`).classList.remove('show'));
+}
+function showScoreBadges(px, ok, bad, miss) {
+  setBadge(`${px}-badge-ok`,   `${px}-cnt-ok`,   ok);
+  setBadge(`${px}-badge-bad`,  `${px}-cnt-bad`,  bad);
+  setBadge(`${px}-badge-miss`, `${px}-cnt-miss`, miss);
+}
+function selectOnePill(container, clicked) {
+  container.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  clicked.classList.add('active');
+}
+
+/* ══════════════════════════════════════
+   MODULE 1 — GAMMES (notes)
+══════════════════════════════════════ */
+let gAlt = 'sharp', gCurrentRootChromatic = 0, gCurrentMode = 'major';
+let gQuizMode = false, gTime = 0, gInterval = null, gQuizTargets = [], gWrongPills = new Set();
+
+function gSetAlt(alt, btn) {
+  gAlt = alt;
+  document.querySelectorAll('#page-gammes .alt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  gBuildRoots(); gBuildAnswers(); gReset();
+}
+
+function gBuildRoots() {
+  const div = document.getElementById('g-roots');
+  div.innerHTML = '';
+  getNoteList(gAlt).forEach(({ display, chromatic }) => {
+    const p = document.createElement('span');
+    p.className = 'pill' + (chromatic === gCurrentRootChromatic ? ' active' : '');
+    p.textContent = display;
+    p.onclick = () => { selectOnePill(div, p); gCurrentRootChromatic = chromatic; gReset(); };
+    div.appendChild(p);
+  });
+}
+
+function selectMode(el) {
+  selectOnePill(document.getElementById('g-mode'), el);
+  gCurrentMode = el.dataset.mode; gReset();
+}
+
+function gBuildAnswers() {
+  const div = document.getElementById('g-answers');
+  div.innerHTML = '';
+  getNoteList(gAlt).forEach(({ display, chromatic }) => {
+    const p = document.createElement('span');
+    p.className = 'pill'; p.textContent = display;
+    p.dataset.chromatic = chromatic; p.dataset.selected = 'false';
+    p.onclick = () => {
+      if (gQuizMode) { gQuizPillClick(p); return; }
+      p.dataset.selected = p.dataset.selected === 'true' ? 'false' : 'true';
+      p.classList.toggle('active', p.dataset.selected === 'true');
+    };
+    div.appendChild(p);
+  });
+}
+
+function gCorrect() {
+  if (gQuizMode) return;
+  const correct = getScaleChromatic(gCurrentRootChromatic, gCurrentMode);
+  let ok = 0, bad = 0, miss = 0;
+  document.querySelectorAll('#g-answers .pill').forEach(p => {
+    p.classList.remove('active');
+    const chr = parseInt(p.dataset.chromatic);
+    const inC = correct.includes(chr), inS = p.dataset.selected === 'true';
+    if      (inS && inC)  { p.style.background='#86efac'; p.style.borderColor='#22c55e'; ok++;   }
+    else if (inS && !inC) { p.style.background='#fca5a5'; p.style.borderColor='#ef4444'; bad++;  }
+    else if (!inS && inC) { p.style.background='#fdba74'; p.style.borderColor='#f97316'; miss++; }
+    else                  { p.style.background=''; p.style.borderColor=''; }
+  });
+  showScoreBadges('g', ok, bad, miss);
+  gShowCorrectScale(correct);
+}
+
+function gShowCorrectScale(chrArr) {
+  const list = getNoteList(gAlt);
+  const div  = document.getElementById('g-correct-notes');
+  div.innerHTML = '';
+  chrArr.forEach(chr => {
+    const entry = list.find(e => e.chromatic === chr);
+    const tag = document.createElement('span');
+    tag.className = 'scale-note-tag';
+    tag.textContent = entry ? entry.display : '';
+    div.appendChild(tag);
+  });
+  document.getElementById('g-result-panel').style.display = 'block';
+}
+
+function gReset() {
+  if (gQuizMode) gStopQuiz();
+  gWrongPills.clear();
+  document.querySelectorAll('#g-answers .pill').forEach(p => {
+    p.dataset.selected = 'false'; p.style.background = ''; p.style.borderColor = '';
+    p.classList.remove('active');
+  });
+  hideBadges('g');
+  document.getElementById('g-score-msg').textContent = '';
+  document.getElementById('g-quiz-info').textContent = '';
+  document.getElementById('g-timer').textContent     = '';
+  document.getElementById('g-result-panel').style.display = 'none';
+}
+
+function gFullReset() {
+  // Stoppe le quiz si actif
+  if (gQuizMode) gStopQuiz();
+  gWrongPills.clear();
+  // Remet les paramètres à leurs valeurs initiales
+  gAlt = 'sharp';
+  gCurrentRootChromatic = 0;
+  gCurrentMode = 'major';
+  // Remet l'UI alt à dièses
+  document.querySelectorAll('#page-gammes .alt-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  // Remet le mode à Majeure
+  document.querySelectorAll('#g-mode .pill').forEach((p,i) => p.classList.toggle('active', i===0));
+  // Rebuild roots & answers, puis reset réponses
+  gBuildRoots();
+  gBuildAnswers();
+  hideBadges('g');
+  document.getElementById('g-score-msg').textContent = '';
+  document.getElementById('g-quiz-info').textContent = '';
+  document.getElementById('g-timer').textContent     = '';
+  document.getElementById('g-result-panel').style.display = 'none';
+}
+
+function gStartQuiz() {
+  gQuizTargets = getScaleChromatic(gCurrentRootChromatic, gCurrentMode);
+  gWrongPills.clear();
+  gQuizMode = true; gTime = 0;
+  gReset(); gQuizMode = true;
+  hideBadges('g'); gSetButtons(true);
+  clearInterval(gInterval);
+  gInterval = setInterval(() => { gTime++; document.getElementById('g-timer').textContent = T('time_fmt', gTime); }, 1000);
+  gUpdateInfo();
+  document.getElementById('g-score-msg').textContent = T('quiz_active_g');
+}
+
+function gStopQuiz() {
+  gQuizMode = false; clearInterval(gInterval); gSetButtons(false);
+  document.getElementById('g-quiz-info').textContent = '';
+}
+
+function gStopQuizManual() {
+  gStopQuiz();
+  document.getElementById('g-score-msg').textContent = T('quiz_stopped');
+  gShowQuizResult();
+}
+
+function gQuizPillClick(p) {
+  if (p.dataset.selected === 'true') return;
+  const ok = gQuizTargets.includes(parseInt(p.dataset.chromatic));
+  if (ok) { p.dataset.selected='true'; p.style.background='#86efac'; p.style.borderColor='#22c55e'; }
+  else    { gWrongPills.add(p);
+            p.style.background='#fca5a5'; p.style.borderColor='#ef4444';
+            setTimeout(() => { p.style.background=''; p.style.borderColor=''; }, 600); }
+  gUpdateInfo(); gCheckEnd();
+}
+
+function gUpdateInfo() {
+  const rem = gQuizTargets.filter(chr =>
+    !document.querySelector(`#g-answers .pill[data-chromatic="${chr}"][data-selected="true"]`)
+  ).length;
+  document.getElementById('g-quiz-info').textContent = rem > 0 ? T('rem_fmt', rem) : '';
+}
+
+function gCheckEnd() {
+  if (gQuizTargets.filter(chr =>
+    !document.querySelector(`#g-answers .pill[data-chromatic="${chr}"][data-selected="true"]`)
+  ).length === 0) {
+    gStopQuiz();
+    document.getElementById('g-score-msg').textContent = T('quiz_done', gTime);
+    gShowQuizResult();
+  }
+}
+
+function gShowQuizResult() {
+  let ok=0, bad=0, miss=0;
+  document.querySelectorAll('#g-answers .pill').forEach(p => {
+    const chr      = parseInt(p.dataset.chromatic);
+    const isTarget = gQuizTargets.includes(chr);
+    const selected = p.dataset.selected === 'true';
+    const wasWrong = gWrongPills.has(p);
+
+    p.classList.remove('active');
+    p.style.background = ''; p.style.borderColor = '';
+
+    if (selected && isTarget) {
+      ok++;
+      p.style.background='#86efac'; p.style.borderColor='#22c55e';
+    } else if (!selected && isTarget) {
+      miss++;
+      p.style.background='#fdba74'; p.style.borderColor='#f97316';
+    } else if (wasWrong) {
+      bad++;
+      p.style.background='#fca5a5'; p.style.borderColor='#ef4444';
+    }
+  });
+  showScoreBadges('g', ok, bad, miss);
+  gShowCorrectScale(gQuizTargets);
+}
+
+function gSetButtons(active) {
+  ['g-btn-corriger','g-btn-quiz','g-btn-reset'].forEach(id => document.getElementById(id).disabled = active);
+  document.getElementById('g-btn-stop').style.display = active ? 'inline-block' : 'none';
+}
+
+/* ══════════════════════════════════════
+   MODULE 2 — MANCHE
+══════════════════════════════════════ */
+let mCells = [], mQuizMode = false, mTargets = [], mWrongCells = new Set(), mTime = 0, mInterval = null;
+let mFretMin = 1, mFretMax = 22, mActiveStrings = new Set([0,1,2,3,4,5]);
+
+function mBuildNotes() {
+  const div = document.getElementById('m-notes');
+  const noteList = [
+    { label: 'C',        chr: 0  },
+    { label: 'C# / Db',  chr: 1  },
+    { label: 'D',        chr: 2  },
+    { label: 'D# / Eb',  chr: 3  },
+    { label: 'Eb',       chr: 3  },
+    { label: 'E',        chr: 4  },
+    { label: 'F',        chr: 5  },
+    { label: 'F# / Gb',  chr: 6  },
+    { label: 'G',        chr: 7  },
+    { label: 'G# / Ab',  chr: 8  },
+    { label: 'A',        chr: 9  },
+    { label: 'A# / Bb',  chr: 10 },
+    { label: 'Bb',       chr: 10 },
+    { label: 'B',        chr: 11 },
+  ];
+  noteList.forEach(({ label, chr }) => {
+    const p = document.createElement('span');
+    p.className = 'pill';
+    p.textContent = label;
+    p.dataset.chromatic = chr;
+    p.onclick = () => {
+      const all = [...document.querySelectorAll(`#m-notes .pill[data-chromatic="${chr}"]`)];
+      const willActive = !p.classList.contains('active');
+      all.forEach(el => el.classList.toggle('active', willActive));
+    };
+    div.appendChild(p);
+  });
+}
+
+function mGetTargets() {
+  // Retourne les indices chromatiques des notes sélectionnées
+  return [...document.querySelectorAll('#m-notes .pill.active')]
+    .map(p => parseInt(p.dataset.chromatic));
+}
+
+function mBuildStringPills() {
+  const div = document.getElementById('m-string-pills');
+  div.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const p = document.createElement('span');
+    p.className = 'string-pill active';
+    p.textContent = i + 1;
+    p.title = i===0?'Mi aigu':i===5?'Mi grave':STRINGS[i];
+    p.onclick = () => {
+      if (mActiveStrings.has(i)) {
+        if (mActiveStrings.size === 1) return;
+        mActiveStrings.delete(i); p.classList.remove('active');
+      } else {
+        mActiveStrings.add(i); p.classList.add('active');
+      }
+      mApplyFilters();
+    };
+    div.appendChild(p);
+  }
+}
+
+function mUpdateRange() {
+  let min = parseInt(document.getElementById('m-fret-min').value) || 1;
+  let max = parseInt(document.getElementById('m-fret-max').value) || 22;
+  min = Math.max(1, Math.min(22, min));
+  max = Math.max(1, Math.min(22, max));
+  if (min > max) max = min;
+  document.getElementById('m-fret-min').value = min;
+  document.getElementById('m-fret-max').value = max;
+  mFretMin = min; mFretMax = max;
+  mApplyFilters();
+}
+
+function mApplyFilters() {
+  mCells.forEach(c => {
+    const fOk = parseInt(c.dataset.fret) >= mFretMin && parseInt(c.dataset.fret) <= mFretMax;
+    const sOk = mActiveStrings.has(parseInt(c.dataset.strIdx));
+    c.classList.toggle('out-of-range', !(fOk && sOk));
+  });
+}
+
+function mGetActiveCells() {
+  return mCells.filter(c => !c.classList.contains('out-of-range'));
+}
+
+function mBuildBoard() {
+  const board = document.getElementById('m-board');
+  board.innerHTML = '';
+  // Colonnes en 1fr pour remplir toute la largeur sans scrollbar
+  board.style.gridTemplateColumns = `40px repeat(${FRETS}, 1fr)`;
+  mCells = [];
+  // Coin vide
+  board.appendChild(Object.assign(document.createElement('div'), {style:'height:26px'}));
+  for (let f = 1; f <= FRETS; f++) {
+    const h = document.createElement('div');
+    h.className='gheader'; h.textContent=f;
+    board.appendChild(h);
+  }
+  STRINGS.forEach((s, si) => {
+    const lbl = document.createElement('div'); lbl.className='gstring'; lbl.textContent=s; board.appendChild(lbl);
+    for (let f = 1; f <= FRETS; f++) {
+      const c = document.createElement('div');
+      c.className='gcell';
+      c.dataset.chromatic = (NOTES_SHARP.indexOf(s) + f) % 12;
+      c.dataset.fret      = f;
+      c.dataset.strIdx    = si;
+      c.dataset.selected  = 'false';
+      c.onclick = () => { if (!mQuizMode) mToggle(c); else mQuizClick(c); };
+      board.appendChild(c); mCells.push(c);
+    }
+  });
+  mApplyFilters();
+}
+
+function calcCellWidth(prefix) {
+  // Pour le module manche : on utilise 1fr via CSS, pas de taille fixe
+  // Pour le module gammes-manche : taille fixe calculée
+  if (prefix === 'm') return null; // signale qu'on utilise 1fr
+  const pageEl = document.getElementById('page-gammes-manche');
+  const avail  = (pageEl ? pageEl.clientWidth : window.innerWidth) - 48 - 40 - 20;
+  const ideal  = Math.floor(avail / FRETS);
+  return Math.max(28, Math.min(44, ideal));
+}
+
+function mToggle(c) {
+  if (c.classList.contains('out-of-range')) return;
+  const sel = c.dataset.selected === 'true';
+  c.dataset.selected = sel ? 'false' : 'true';
+  c.classList.toggle('selected', !sel);
+}
+
+function mCorrect() {
+  if (mQuizMode) return;
+  const targets = mGetTargets();
+  if (!targets.length) return alert(T('alert_choose'));
+  let ok=0,bad=0,miss=0;
+  const mActive = mGetActiveCells();
+  // Nettoyer les étiquettes précédentes
+  mCells.forEach(c => {
+    c.classList.remove('correct','wrong','missed');
+    c.querySelectorAll('.note-label').forEach(el=>el.remove());
+  });
+  mActive.forEach(c => {
+    const should = targets.includes(parseInt(c.dataset.chromatic)), sel = c.dataset.selected==='true';
+    if      (sel && should)  { c.classList.add('correct'); ok++;   showNoteLabel(c, false); }
+    else if (sel && !should) { c.classList.add('wrong');   bad++;  showNoteLabel(c, true);  }
+    else if (!sel && should) { c.classList.add('missed');  miss++; showNoteLabel(c, false); }
+  });
+  showScoreBadges('m', ok, bad, miss);
+  document.getElementById('m-score-msg').textContent = '';
+}
+
+function mReset() {
+  if (mQuizMode) mStopQuiz();
+  mWrongCells.clear();
+  mCells.forEach(c => {
+    c.dataset.selected='false'; c.className='gcell';
+    c.querySelectorAll('.note-label,.note-ring').forEach(el=>el.remove());
+  });
+  mApplyFilters();
+  hideBadges('m');
+  document.getElementById('m-score-msg').textContent='';
+  document.getElementById('m-quiz-info').textContent='';
+  document.getElementById('m-timer').textContent=T('timer_zero');
+}
+
+function mFullReset() {
+  if (mQuizMode) mStopQuiz();
+  mWrongCells.clear();
+  // Remet la zone de travail à ses valeurs par défaut
+  mFretMin = 1; mFretMax = 22;
+  mActiveStrings = new Set([0,1,2,3,4,5]);
+  document.getElementById('m-fret-min').value = 1;
+  document.getElementById('m-fret-max').value = 22;
+  // Remet les pastilles cordes à toutes actives
+  document.querySelectorAll('#m-string-pills .string-pill').forEach(p => p.classList.add('active'));
+  // Déselectionne toutes les notes cibles
+  document.querySelectorAll('#m-notes .pill').forEach(p => p.classList.remove('active'));
+  // Nettoie le manche
+  mCells.forEach(c => {
+    c.dataset.selected = 'false'; c.className = 'gcell';
+    c.querySelectorAll('.note-label,.note-ring').forEach(el => el.remove());
+  });
+  mApplyFilters();
+  hideBadges('m');
+  document.getElementById('m-score-msg').textContent = '';
+  document.getElementById('m-quiz-info').textContent = '';
+  document.getElementById('m-timer').textContent     = T('timer_zero');
+}
+
+function mResetSilent() { mWrongCells.clear(); mCells.forEach(c => { c.dataset.selected='false'; c.className='gcell'; c.querySelectorAll('.note-label,.note-ring').forEach(el=>el.remove()); }); mApplyFilters(); }
+
+function mStartQuiz() {
+  const noteChr = mGetTargets();
+  if (!noteChr.length) return alert(T('alert_select'));
+  // targets = cellules actives dont la note est sélectionnée
+  mTargets = mGetActiveCells().filter(c => noteChr.includes(parseInt(c.dataset.chromatic)));
+  if (!mTargets.length) return alert(T('alert_no_target'));
+  mQuizMode=true; mTime=0; mResetSilent(); hideBadges('m');
+  document.getElementById('m-score-msg').textContent=T('quiz_active');
+  mSetButtons(true);
+  clearInterval(mInterval);
+  mInterval=setInterval(()=>{mTime++;document.getElementById('m-timer').textContent=T('time_fmt', mTime);},1000);
+  mUpdateInfo();
+}
+
+function mStopQuiz() { mQuizMode=false; clearInterval(mInterval); mSetButtons(false); document.getElementById('m-quiz-info').textContent=''; }
+
+function mStopQuizManual() {
+  mStopQuiz();
+  document.getElementById('m-score-msg').textContent=T('quiz_stopped');
+  mShowQuizResult();  // affiche couleurs + notes + badges
+}
+
+function mQuizClick(c) {
+  if (c.classList.contains('locked') || c.classList.contains('out-of-range')) return;
+  const chr  = parseInt(c.dataset.chromatic);
+  const ok   = mTargets.includes(c);
+
+  // Note qui sonne brièvement
+  const name = NOTES_SHARP[chr];
+  const tag  = document.createElement('span');
+  tag.className   = 'note-ring' + (ok ? '' : ' wrong-ring');
+  tag.textContent = name;
+  c.appendChild(tag);
+  setTimeout(() => tag.remove(), 1400);
+
+  if (ok) {
+    c.dataset.selected='true'; c.classList.add('correct','locked');
+  } else {
+    mWrongCells.add(c);
+    c.classList.add('wrong','locked');
+    setTimeout(() => c.classList.remove('wrong','locked'), 600);
+  }
+  mUpdateInfo(); mCheckEnd();
+}
+
+function mUpdateInfo() {
+  const rem = mTargets.filter(c=>c.dataset.selected!=='true').length;
+  document.getElementById('m-quiz-info').textContent = rem>0?T('rem_fmt',rem):'';
+}
+
+function mCheckEnd() {
+  if (mTargets.filter(c=>c.dataset.selected!=='true').length===0) {
+    mStopQuiz();
+    document.getElementById('m-score-msg').textContent=T('quiz_done', mTime);
+    mShowQuizResult();  // affiche aussi les badges ok/bad/miss
+  }
+}
+
+function mShowQuizResult() {
+  let ok=0, bad=0, miss=0;
+  mGetActiveCells().forEach(c => {
+    const isTarget = mTargets.includes(c);
+    const selected = c.dataset.selected === 'true';
+    const wasWrong = mWrongCells.has(c);
+
+    if (selected && isTarget) {
+      ok++;
+      showNoteLabel(c, false);
+    } else if (!selected && isTarget) {
+      miss++;
+      c.classList.add('missed');
+      showNoteLabel(c, false);
+    } else if (wasWrong) {
+      bad++;
+      c.classList.add('wrong');
+      showNoteLabel(c, true);
+    }
+  });
+  showScoreBadges('m', ok, bad, miss);
+}
+
+function showNoteLabel(c, isWrong) {
+  if (c.querySelector('.note-label')) return; // évite les doublons
+  const chr  = parseInt(c.dataset.chromatic);
+  const name = NOTES_SHARP[chr];
+  const lbl  = document.createElement('span');
+  lbl.className   = 'note-label' + (isWrong ? ' note-label-wrong' : '');
+  lbl.textContent = name;
+  c.appendChild(lbl);
+}
+
+function mSetButtons(active) {
+  ['m-btn-corriger','m-btn-quiz','m-btn-reset'].forEach(id=>document.getElementById(id).disabled=active);
+  document.getElementById('m-btn-stop').style.display=active?'inline-block':'none';
+}
+
+/* ══════════════════════════════════════
+   MODULE 3 — GAMMES SUR LE MANCHE
+══════════════════════════════════════ */
+let gmCells=[], gmQuizMode=false, gmTargets=[], gmWrongCells=new Set(), gmTime=0, gmInterval=null;
+let gmAlt='sharp', gmCurrentRootChromatic=0, gmCurrentMode='major';
+let gmFretMin=1, gmFretMax=22;
+// Cordes actives : Set d'indices 0-5 (0=Mi aigu=corde 1 … 5=Mi grave=corde 6)
+let gmActiveStrings = new Set([0,1,2,3,4,5]);
+
+/* -- Altération -- */
+function gmSetAlt(alt, btn) {
+  gmAlt = alt;
+  document.querySelectorAll('#page-gammes-manche .alt-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  gmBuildRoots(); gmReset();
+}
+
+function gmBuildRoots() {
+  const div = document.getElementById('gm-roots');
+  div.innerHTML = '';
+  getNoteList(gmAlt).forEach(({display, chromatic}) => {
+    const p = document.createElement('span');
+    p.className = 'pill' + (chromatic===gmCurrentRootChromatic?' active':'');
+    p.textContent = display;
+    p.onclick = () => { selectOnePill(div,p); gmCurrentRootChromatic=chromatic; gmReset(); };
+    div.appendChild(p);
+  });
+}
+
+function gmSelectMode(el) {
+  selectOnePill(document.getElementById('gm-mode'), el);
+  gmCurrentMode = el.dataset.mode; gmReset();
+}
+
+/* -- Pastilles cordes -- */
+function gmBuildStringPills() {
+  const div = document.getElementById('gm-string-pills');
+  div.innerHTML = '';
+  for (let i=0; i<6; i++) {
+    const p = document.createElement('span');
+    p.className = 'string-pill active';
+    p.textContent = i+1;   // 1 = Mi aigu, 6 = Mi grave
+    p.title = i===0?'Mi aigu':i===5?'Mi grave':STRINGS[i];
+    p.onclick = () => {
+      if (gmActiveStrings.has(i)) {
+        if (gmActiveStrings.size===1) return; // garder au moins 1 corde
+        gmActiveStrings.delete(i); p.classList.remove('active');
+      } else {
+        gmActiveStrings.add(i); p.classList.add('active');
+      }
+      gmApplyFilters();
+    };
+    div.appendChild(p);
+  }
+}
+
+/* -- Plage de frettes (champs texte) -- */
+function gmUpdateRange() {
+  let min = parseInt(document.getElementById('gm-fret-min').value) || 1;
+  let max = parseInt(document.getElementById('gm-fret-max').value) || 22;
+  min = Math.max(1, Math.min(22, min));
+  max = Math.max(1, Math.min(22, max));
+  if (min > max) max = min;
+  document.getElementById('gm-fret-min').value = min;
+  document.getElementById('gm-fret-max').value = max;
+  gmFretMin = min; gmFretMax = max;
+  gmApplyFilters();
+}
+
+/* -- Application combinée frettes + cordes -- */
+function gmApplyFilters() {
+  gmCells.forEach(c => {
+    const fOk = parseInt(c.dataset.fret) >= gmFretMin && parseInt(c.dataset.fret) <= gmFretMax;
+    const sOk = gmActiveStrings.has(parseInt(c.dataset.strIdx));
+    c.classList.toggle('out-of-range', !(fOk && sOk));
+  });
+}
+
+function gmGetActiveCells() {
+  return gmCells.filter(c => !c.classList.contains('out-of-range'));
+}
+
+/* -- Manche -- */
+function gmBuildBoard() {
+  const board = document.getElementById('gm-board');
+  board.innerHTML = '';
+  board.style.gridTemplateColumns = `40px repeat(${FRETS}, 1fr)`;
+  gmCells = [];
+  board.appendChild(Object.assign(document.createElement('div'), {style:'height:26px'}));
+  for (let f=1; f<=FRETS; f++) {
+    const h=document.createElement('div'); h.className='gheader'; h.textContent=f;
+    board.appendChild(h);
+  }
+  STRINGS.forEach((s, si) => {
+    const lbl=document.createElement('div'); lbl.className='gstring'; lbl.textContent=s; board.appendChild(lbl);
+    for (let f=1; f<=FRETS; f++) {
+      const c=document.createElement('div');
+      c.className='gcell';
+      c.dataset.chromatic = chromaticAt(s, f);
+      c.dataset.fret      = f;
+      c.dataset.strIdx    = si;  // 0=Mi aigu … 5=Mi grave
+      c.dataset.selected  = 'false';
+      c.onclick = () => { if (!gmQuizMode) gmToggle(c); else gmQuizClick(c); };
+      board.appendChild(c); gmCells.push(c);
+    }
+  });
+  gmApplyFilters();
+}
+
+function gmToggle(c) {
+  if (c.classList.contains('out-of-range')) return;
+  const sel = c.dataset.selected==='true';
+  c.dataset.selected = sel?'false':'true';
+  c.classList.toggle('selected',!sel);
+}
+
+function gmCorrect() {
+  if (gmQuizMode) return;
+  const targetChr   = getScaleChromatic(gmCurrentRootChromatic, gmCurrentMode);
+  const activeCells = gmGetActiveCells();
+  let ok=0,bad=0,miss=0;
+  // Nettoyer les étiquettes précédentes
+  gmCells.forEach(c => {
+    c.classList.remove('correct','wrong','missed');
+    c.querySelectorAll('.note-label').forEach(el=>el.remove());
+  });
+  activeCells.forEach(c => {
+    const inC=targetChr.includes(parseInt(c.dataset.chromatic)), sel=c.dataset.selected==='true';
+    const noteName = getNoteList(gmAlt).find(e=>e.chromatic===parseInt(c.dataset.chromatic))?.display || NOTES_SHARP[parseInt(c.dataset.chromatic)];
+    if      (sel && inC)  { c.classList.add('correct'); ok++;   gmShowCellNote(c, noteName, false); }
+    else if (sel && !inC) { c.classList.add('wrong');   bad++;  gmShowCellNote(c, noteName, true);  }
+    else if (!sel && inC) { c.classList.add('missed');  miss++; gmShowCellNote(c, noteName, false); }
+  });
+  showScoreBadges('gm', ok, bad, miss);
+  document.getElementById('gm-score-msg').textContent='';
+}
+
+function gmShowCellNote(c, name, isWrong) {
+  if (c.querySelector('.note-label')) return;
+  const lbl = document.createElement('span');
+  lbl.className = 'note-label' + (isWrong ? ' note-label-wrong' : '');
+  lbl.textContent = name;
+  c.appendChild(lbl);
+}
+
+function gmReset() {
+  if (gmQuizMode) gmStopQuiz();
+  gmWrongCells.clear();
+  gmCells.forEach(c => {
+    c.dataset.selected='false'; c.className='gcell';
+    c.querySelectorAll('.note-label,.note-ring').forEach(el=>el.remove());
+  });
+  gmApplyFilters();
+  hideBadges('gm');
+  document.getElementById('gm-score-msg').textContent='';
+  document.getElementById('gm-quiz-info').textContent='';
+  document.getElementById('gm-timer').textContent=T('timer_zero');
+}
+
+function gmFullReset() {
+  if (gmQuizMode) gmStopQuiz();
+  gmWrongCells.clear();
+  // Remet les paramètres gamme
+  gmAlt = 'sharp';
+  gmCurrentRootChromatic = 0;
+  gmCurrentMode = 'major';
+  // Remet la zone de travail
+  gmFretMin = 1; gmFretMax = 22;
+  gmActiveStrings = new Set([0,1,2,3,4,5]);
+  document.getElementById('gm-fret-min').value = 1;
+  document.getElementById('gm-fret-max').value = 22;
+  document.querySelectorAll('#gm-string-pills .string-pill').forEach(p => p.classList.add('active'));
+  // Remet l'UI alt à dièses
+  document.querySelectorAll('#page-gammes-manche .alt-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  // Remet le mode à Majeure
+  document.querySelectorAll('#gm-mode .pill').forEach((p,i) => p.classList.toggle('active', i===0));
+  // Rebuild roots
+  gmBuildRoots();
+  // Nettoie le manche
+  gmCells.forEach(c => {
+    c.dataset.selected = 'false'; c.className = 'gcell';
+    c.querySelectorAll('.note-label,.note-ring').forEach(el => el.remove());
+  });
+  gmApplyFilters();
+  hideBadges('gm');
+  document.getElementById('gm-score-msg').textContent = '';
+  document.getElementById('gm-quiz-info').textContent = '';
+  document.getElementById('gm-timer').textContent     = T('timer_zero');
+}
+
+function gmResetSilent() {
+  gmWrongCells.clear();
+  gmCells.forEach(c => { c.dataset.selected='false'; c.className='gcell'; c.querySelectorAll('.note-label,.note-ring').forEach(el=>el.remove()); });
+  gmApplyFilters();
+}
+
+function gmStartQuiz() {
+  const targetChr   = getScaleChromatic(gmCurrentRootChromatic, gmCurrentMode);
+  const activeCells = gmGetActiveCells();
+  gmTargets = activeCells.filter(c => targetChr.includes(parseInt(c.dataset.chromatic)));
+  if (!gmTargets.length) return alert(T('alert_no_gm'));
+  gmQuizMode=true; gmTime=0; gmResetSilent(); hideBadges('gm');
+  document.getElementById('gm-score-msg').textContent=T('quiz_active');
+  gmSetButtons(true);
+  clearInterval(gmInterval);
+  gmInterval=setInterval(()=>{gmTime++;document.getElementById('gm-timer').textContent=T('time_fmt', gmTime);},1000);
+  gmUpdateInfo();
+}
+
+function gmStopQuiz() { gmQuizMode=false; clearInterval(gmInterval); gmSetButtons(false); document.getElementById('gm-quiz-info').textContent=''; }
+
+function gmStopQuizManual() {
+  gmStopQuiz();
+  document.getElementById('gm-score-msg').textContent=T('quiz_stopped');
+  gmShowQuizResult();  // affiche couleurs + notes + badges
+}
+
+function gmQuizClick(c) {
+  if (c.classList.contains('locked')||c.classList.contains('out-of-range')) return;
+  const isTarget = gmTargets.includes(c);
+
+  // Affiche la note qui "sonne" puis disparaît
+  const chr      = parseInt(c.dataset.chromatic);
+  const noteName = getNoteList(gmAlt).find(e => e.chromatic === chr)?.display || NOTES_SHARP[chr];
+  const tag      = document.createElement('span');
+  tag.className  = 'note-ring' + (isTarget ? '' : ' wrong-ring');
+  tag.textContent = noteName;
+  c.appendChild(tag);
+  setTimeout(() => tag.remove(), 1400);
+
+  if (isTarget) {
+    c.dataset.selected='true'; c.classList.add('correct','locked');
+  } else {
+    gmWrongCells.add(c);
+    c.classList.add('wrong','locked');
+    setTimeout(()=>c.classList.remove('wrong','locked'), 600);
+  }
+  gmUpdateInfo(); gmCheckEnd();
+}
+
+function gmUpdateInfo() {
+  const rem = gmTargets.filter(c=>c.dataset.selected!=='true').length;
+  document.getElementById('gm-quiz-info').textContent=rem>0?T('rem_fmt',rem):'';
+}
+
+function gmCheckEnd() {
+  if (gmTargets.filter(c=>c.dataset.selected!=='true').length===0) {
+    gmStopQuiz();
+    document.getElementById('gm-score-msg').textContent=T('quiz_done', gmTime);
+    gmShowQuizResult();
+  }
+}
+
+function gmShowQuizResult() {
+  let ok=0, bad=0, miss=0;
+  const activeCells  = gmGetActiveCells();
+  const targetChrArr = getScaleChromatic(gmCurrentRootChromatic, gmCurrentMode);
+  activeCells.forEach(c => {
+    const chr      = parseInt(c.dataset.chromatic);
+    const isTarget = targetChrArr.includes(chr);
+    const selected = c.dataset.selected === 'true';
+    const wasWrong = gmWrongCells.has(c);
+    const noteName = getNoteList(gmAlt).find(e => e.chromatic === chr)?.display || NOTES_SHARP[chr];
+
+    if (selected && isTarget) {
+      ok++;
+      if (!c.querySelector('.note-label')) {
+        const lbl = document.createElement('span');
+        lbl.className = 'note-label'; lbl.textContent = noteName; c.appendChild(lbl);
+      }
+    } else if (!selected && isTarget) {
+      miss++;
+      c.classList.add('missed');
+      const lbl = document.createElement('span');
+      lbl.className = 'note-label'; lbl.textContent = noteName; c.appendChild(lbl);
+    } else if (wasWrong) {
+      bad++;
+      c.classList.add('wrong');
+      const lbl = document.createElement('span');
+      lbl.className = 'note-label note-label-wrong'; lbl.textContent = noteName; c.appendChild(lbl);
+    }
+  });
+  showScoreBadges('gm', ok, bad, miss);
+}
+
+function gmSetButtons(active) {
+  ['gm-btn-corriger','gm-btn-quiz','gm-btn-reset'].forEach(id=>document.getElementById(id).disabled=active);
+  document.getElementById('gm-btn-stop').style.display=active?'inline-block':'none';
+}
+
+/* ══════════════════════════
+   INTERNATIONALISATION
+══════════════════════════ */
+const LANG = {
+  fr: {
+    logo:            '🎸 Guitare',
+    home_title:      'Kit du Grand<br>Débutant',
+    home_sub:        'Trois outils pour apprendre à votre rythme,<br>pas à pas, sans se perdre.',
+    mod1_title:      'Travailler ses gammes',
+    mod1_desc:       'Choisissez une gamme, majeure ou mineure, et retrouvez ses notes parmi les 12.',
+    mod1_sub:        'Choisissez une tonique et un mode, puis cochez les notes de la gamme.',
+    mod2_title:      'Apprendre le manche de guitare',
+    mod2_desc:       'Sélectionnez des notes cibles et retrouvez-les sur tout le manche, avec quiz chronométré.',
+    mod2_sub:        'Sélectionnez les notes cibles, puis trouvez-les sur le manche de guitare.',
+    mod3_title:      'Gamme sur le manche de guitare',
+    mod3_desc:       'Choisissez une gamme et placez toutes ses occurrences sur le manche — en mode libre ou quiz.',
+    mod3_sub:        'Choisissez une gamme et placez toutes ses notes sur le manche.',
+    back:            '← Accueil',
+    banner_html:     '<strong>Mode libre</strong> — Prenez le temps de réfléchir, modifiez vos choix à volonté, puis validez votre réponse avec <strong>Corriger</strong>. Pour un défi en temps réel sans filet, activez le <strong>Quiz</strong> : chaque clic est immédiatement évalué.',
+    label_alt:       'Altération',
+    label_root:      'Tonique',
+    label_mode:      'Mode',
+    label_answers:   'Votre réponse — cochez les notes de la gamme',
+    label_correct_scale: 'Gamme correcte',
+    label_notes_work:'Notes à travailler',
+    label_zone:      'Zone de travail',
+    zone_desc:       "Concentrez-vous sur une portion précise du manche en limitant la plage de frettes et en choisissant les cordes à travailler. Idéal pour progresser zone par zone plutôt que sur tout le manche d'un coup.",
+    sharp:           '# Dièses',
+    flat:            '♭ Bémols',
+    scale_major:     'Majeure',
+    scale_minor:     'Mineure naturelle',
+    scale_penta_maj: 'Pentatonique majeure',
+    scale_penta_min: 'Pentatonique mineure',
+    btn_correct:     'Corriger',
+    btn_reset:       'Reset',
+    btn_quiz:        'Quiz',
+    btn_stop:        '⏹ Arrêter & corriger',
+    timer_zero:      'Temps : 0s',
+    label_frets:     'Frettes',
+    fret_from:       'De',
+    fret_to:         'à',
+    fret_hint:       'Frettes 1 à 22',
+    label_strings:   'Cordes (1 = Mi aigu · 6 = Mi grave)',
+    strings_hint:    'Toutes les cordes actives par défaut',
+    quiz_active_g:   'Mode quiz — cliquez sur les notes de la gamme',
+    quiz_active:     'Mode quiz actif',
+    quiz_stopped:    'Quiz interrompu — correction :',
+    quiz_done:       (t) => `Terminé en ${t}s 🎉`,
+    time_fmt:        (t) => `Temps : ${t}s`,
+    rem_fmt:         (n) => `Notes restantes : ${n}`,
+    alert_choose:    'Choisis des notes',
+    alert_select:    'Sélectionne des notes',
+    alert_no_target: 'Aucune note cible sur cette zone',
+    alert_no_gm:     'Aucune note à trouver sur cette zone',
+  },
+  en: {
+    logo:            '🎸 Guitar',
+    home_title:      'The Complete<br>Beginner Kit',
+    home_sub:        'Three tools to learn at your own pace,<br>step by step, without getting lost.',
+    mod1_title:      'Practice scales',
+    mod1_desc:       'Choose a scale, major or minor, and find its notes among the 12.',
+    mod1_sub:        'Choose a root note and a mode, then check the scale notes.',
+    mod2_title:      'Learn the guitar fretboard',
+    mod2_desc:       'Select target notes and find them across the fretboard, with a timed quiz.',
+    mod2_sub:        'Select the target notes, then find them on the guitar fretboard.',
+    mod3_title:      'Scales on the fretboard',
+    mod3_desc:       'Choose a scale and place all its occurrences on the fretboard — in free mode or quiz.',
+    mod3_sub:        'Choose a scale and place all its notes on the fretboard.',
+    back:            '← Home',
+    banner_html:     '<strong>Free mode</strong> — Take your time, adjust your choices freely, then validate with <strong>Check</strong>. For a real-time challenge with no safety net, switch to <strong>Quiz</strong> mode: every click is evaluated instantly.',
+    label_alt:       'Accidentals',
+    label_root:      'Root note',
+    label_mode:      'Mode',
+    label_answers:   'Your answer — check the scale notes',
+    label_correct_scale: 'Correct scale',
+    label_notes_work:'Notes to practise',
+    label_zone:      'Practice zone',
+    zone_desc:       'Focus on a specific section of the fretboard by limiting the fret range and choosing which strings to work on. Perfect for progressing zone by zone rather than tackling the whole neck at once.',
+    sharp:           '# Sharps',
+    flat:            '♭ Flats',
+    scale_major:     'Major',
+    scale_minor:     'Natural minor',
+    scale_penta_maj: 'Major pentatonic',
+    scale_penta_min: 'Minor pentatonic',
+    btn_correct:     'Check',
+    btn_reset:       'Reset',
+    btn_quiz:        'Quiz',
+    btn_stop:        '⏹ Stop & check',
+    timer_zero:      'Time: 0s',
+    label_frets:     'Frets',
+    fret_from:       'From',
+    fret_to:         'to',
+    fret_hint:       'Frets 1 to 22',
+    label_strings:   'Strings (1 = high E · 6 = low E)',
+    strings_hint:    'All strings active by default',
+    quiz_active_g:   'Quiz mode — click the scale notes',
+    quiz_active:     'Quiz mode active',
+    quiz_stopped:    'Quiz stopped — correction:',
+    quiz_done:       (t) => `Completed in ${t}s 🎉`,
+    time_fmt:        (t) => `Time: ${t}s`,
+    rem_fmt:         (n) => `Remaining: ${n}`,
+    alert_choose:    'Please select some notes',
+    alert_select:    'Please select some notes',
+    alert_no_target: 'No target notes in this zone',
+    alert_no_gm:     'No notes to find in this zone',
+  }
+};
+
+let currentLang = 'fr';
+
+function setLang(lang, btn) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyLang();
+}
+
+function applyLang() {
+  const L = LANG[currentLang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (L[key] !== undefined) el.innerHTML = L[key];
+  });
+  // Rebuild dynamic elements that depend on language
+  gBuildRoots();
+  gBuildAnswers();
+  gmBuildRoots();
+}
+
+function T(key, ...args) {
+  const val = LANG[currentLang][key];
+  return typeof val === 'function' ? val(...args) : (val || key);
+}
+
+/* ══════════════════════════
+   INIT
+══════════════════════════ */
+gBuildRoots();
+gBuildAnswers();
+mBuildNotes();
+mBuildBoard();
+mBuildStringPills();
+gmBuildRoots();
+gmBuildStringPills();
+gmBuildBoard();
+</script>
+</body>
+</html>
