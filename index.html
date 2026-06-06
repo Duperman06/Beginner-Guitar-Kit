@@ -146,6 +146,131 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .string-pill:hover { border-color:var(--accent); }
 .string-pill.active { background:var(--accent); border-color:var(--accent); color:white; }
 
+/* ── QUIZ ALÉATOIRE ── */
+.rquiz-panel {
+  background: var(--surface);
+  border: 2px solid #7c3aed;
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.rquiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.rquiz-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  color: #7c3aed;
+}
+.rquiz-progress {
+  font-size: 13px;
+  font-weight: 700;
+  color: #7c3aed;
+}
+.rquiz-question {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+  min-height: 1.5em;
+}
+.rquiz-note-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.rquiz-pill {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.rquiz-pill:hover { border-color: #7c3aed; color: #7c3aed; }
+.rquiz-pill.correct { background: #86efac; border-color: #22c55e; color: #14532d; cursor: default; }
+.rquiz-pill.wrong   { background: #fca5a5; border-color: #ef4444; color: #7f1d1d; cursor: default; }
+.rquiz-pill.reveal  { background: #fdba74; border-color: #f97316; color: #7c2d12; cursor: default; }
+.rquiz-pill.locked  { pointer-events: none; opacity: .45; }
+.rquiz-feedback {
+  font-size: 14px;
+  font-weight: 700;
+  min-height: 1.4em;
+  margin-bottom: 10px;
+}
+.rquiz-feedback.ok  { color: #16a34a; }
+.rquiz-feedback.bad { color: #dc2626; }
+.rquiz-cell-highlight {
+  background: #7c3aed !important;
+  color: white !important;
+}
+.rquiz-setup { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.rquiz-count-input {
+  width: 64px; padding: 6px 8px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 15px; font-weight: 700; text-align: center;
+  font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--bg);
+}
+.rquiz-count-input:focus { outline: none; border-color: #7c3aed; }
+.btn-rquiz { background: #7c3aed; color: white; }
+.btn-rquiz-stop { background: #1a1a1a; color: white; }
+.rquiz-score-final {
+  font-size: 15px; font-weight: 700; color: var(--text); margin-top: 8px;
+}
+/* Quiz Oui/Non */
+.yn-note-display {
+  font-family: 'DM Serif Display', serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  padding: 20px 0 8px;
+  letter-spacing: 1px;
+  min-height: 80px;
+}
+.yn-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 12px 0 6px;
+}
+.yn-btn {
+  width: 120px;
+  height: 52px;
+  border: none;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: transform 0.1s, opacity 0.15s;
+}
+.yn-btn:hover:not(:disabled) { transform: translateY(-2px); opacity: .88; }
+.yn-btn:disabled { opacity: .38; cursor: not-allowed; }
+.yn-yes { background: #22c55e; color: white; }
+.yn-no  { background: #ef4444; color: white; }
+.rquiz-cell-selected {
+  background: #c4b5fd !important;
+  outline: 2px solid #7c3aed;
+}
+/* mode selector tabs */
+.rquiz-mode-tabs { display:flex; gap:8px; margin-bottom:14px; }
+.rquiz-mode-tab {
+  padding: 6px 16px; border-radius: 8px; border: 1.5px solid var(--border);
+  font-size: 13px; font-weight: 700; cursor: pointer; background: var(--bg);
+  font-family: 'DM Sans', sans-serif; color: var(--muted); transition: all .15s;
+}
+.rquiz-mode-tab.active { background: #7c3aed; border-color: #7c3aed; color: white; }
+
 /* ── MANCHE ── */
 .board-wrap { overflow-x:visible; padding-bottom:8px; }
 .board { display:grid; gap:2px; background:#2a2a2a; padding:6px; width:100%; border-radius:8px; }
@@ -187,6 +312,88 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   15%  { opacity:1; transform:translateX(-50%) scale(1)   translateY(0px); }
   60%  { opacity:1; transform:translateX(-50%) scale(1)   translateY(0px); }
   100% { opacity:0; transform:translateX(-50%) scale(0.9) translateY(-6px); }
+}
+
+/* ── ROUE CHROMATIQUE ── */
+.chromatic-wheel-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0 8px;
+}
+.chromatic-wheel {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  flex-shrink: 0;
+}
+.wheel-note {
+  position: absolute;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.2;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s, border-color 0.15s;
+  user-select: none;
+  transform: translate(-50%, -50%);
+}
+.wheel-note:hover {
+  transform: translate(-50%, -50%) scale(1.12);
+  border-color: var(--accent);
+  z-index: 2;
+}
+.wheel-note.accidental {
+  background: #1d3a2f;
+  color: white;
+  border-color: #1d3a2f;
+  font-size: 11px;
+}
+.wheel-note.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.22);
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 3;
+}
+.wheel-note.accidental.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.22);
+}
+/* Couleurs de feedback sur la roue */
+.wheel-note.w-correct { background: #22c55e !important; border-color: #22c55e !important; color: white !important; }
+.wheel-note.w-wrong   { background: #ef4444 !important; border-color: #ef4444 !important; color: white !important; }
+.wheel-note.w-missed  { background: #f97316 !important; border-color: #f97316 !important; color: white !important; }
+/* Centre de la roue */
+.wheel-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  text-align: center;
+  line-height: 1.4;
+  pointer-events: none;
 }
 
 /* Étiquette permanente affichée en fin de quiz */
@@ -285,12 +492,19 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
   <div class="panel">
     <div class="panel-label" data-i18n="label_answers">Votre réponse — cochez les notes de la gamme</div>
-    <div class="pills" id="g-answers"></div>
+    <div class="chromatic-wheel-wrap">
+      <div class="chromatic-wheel" id="g-wheel">
+        <div class="wheel-center" id="g-wheel-center">12 notes<br>chromatiques</div>
+      </div>
+    </div>
+    <!-- Fallback pills (utilisé par le quiz pour la logique, caché visuellement) -->
+    <div class="pills" id="g-answers" style="display:none"></div>
     <div class="btn-row">
       <button class="btn btn-primary" id="g-btn-corriger" onclick="gCorrect()" data-i18n="btn_correct">Corriger</button>
       <button class="btn btn-gray"    id="g-btn-reset"    onclick="gReset()" data-i18n="btn_reset">Reset</button>
       <button class="btn btn-quiz"    id="g-btn-quiz"     onclick="gStartQuiz()" data-i18n="btn_quiz">Quiz</button>
       <button class="btn btn-stop"    id="g-btn-stop"     onclick="gStopQuizManual()" style="display:none" data-i18n="btn_stop">⏹ Arrêter &amp; corriger</button>
+      <button class="btn btn-rquiz"  id="g-btn-yn"      onclick="gYnOpen()" data-i18n="btn_yn">🎲 Quiz Oui / Non</button>
     </div>
     <div class="score-row">
       <span class="score-badge" id="g-badge-ok">  <span class="score-dot dot-green"></span><span id="g-cnt-ok">0</span></span>
@@ -305,6 +519,46 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <div class="panel" id="g-result-panel" style="display:none">
     <div class="panel-label" data-i18n="label_correct_scale">Gamme correcte</div>
     <div class="scale-notes" id="g-correct-notes"></div>
+  </div>
+
+  <!-- Quiz Oui/Non -->
+  <div class="rquiz-panel" id="g-yn-panel" style="display:none">
+    <div class="rquiz-header">
+      <span class="rquiz-title" data-i18n="rq_title_yn">🎲 Quiz Oui / Non</span>
+      <span class="rquiz-progress" id="g-yn-progress"></span>
+    </div>
+
+    <div id="g-yn-setup">
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
+        <span data-i18n="rq_yn_desc_full">Une note s'affiche — répondez <strong style="color:#22c55e">Oui</strong> si elle fait partie de la gamme, <strong style="color:#ef4444">Non</strong> sinon. Feedback immédiat.</span>
+      </p>
+      <div class="panel-label" style="margin-bottom:10px" data-i18n="rq_nb_q">Nombre de questions</div>
+      <div class="rquiz-setup">
+        <input class="rquiz-count-input" type="number" id="g-yn-count" min="1" max="50" value="12" onfocus="this.select()">
+        <button class="btn btn-rquiz" onclick="gYnStart()" data-i18n="rq_start">▶ Démarrer</button>
+      </div>
+    </div>
+
+    <div id="g-yn-question" style="display:none">
+      <div class="yn-note-display" id="g-yn-note"></div>
+      <div class="yn-buttons">
+        <button class="yn-btn yn-yes" id="g-yn-yes" onclick="gYnAnswer(true)" data-i18n="yn_yes">✓ Oui</button>
+        <button class="yn-btn yn-no"  id="g-yn-no"  onclick="gYnAnswer(false)" data-i18n="yn_no">✗ Non</button>
+      </div>
+      <div class="rquiz-feedback" id="g-yn-feedback"></div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn btn-rquiz" id="g-yn-next" onclick="gYnNext()" style="display:none" data-i18n="rq_next">Suivant →</button>
+        <button class="btn btn-rquiz-stop" onclick="gYnStop()" data-i18n="rq_stop">⏹ Arrêter</button>
+      </div>
+    </div>
+
+    <div id="g-yn-result" style="display:none">
+      <div class="rquiz-score-final" id="g-yn-score-final"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn btn-rquiz" onclick="gYnRestart()" data-i18n="rq_restart">↺ Recommencer</button>
+        <button class="btn btn-gray"  onclick="gYnClose()" data-i18n="rq_close">Fermer</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -358,6 +612,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <button class="btn btn-gray"    id="m-btn-reset"    onclick="mReset()" data-i18n="btn_reset">Reset</button>
       <button class="btn btn-quiz"    id="m-btn-quiz"     onclick="mStartQuiz()" data-i18n="btn_quiz">Quiz</button>
       <button class="btn btn-stop"    id="m-btn-stop"     onclick="mStopQuizManual()" style="display:none" data-i18n="btn_stop">⏹ Arrêter & corriger</button>
+      <button class="btn btn-rquiz"  id="m-btn-rquiz"   onclick="mRqOpen()" data-i18n="btn_rquiz">🎲 Quiz aléatoire</button>
     </div>
     <div class="score-row">
       <span class="score-badge" id="m-badge-ok">  <span class="score-dot dot-green"></span><span id="m-cnt-ok">0</span></span>
@@ -369,6 +624,57 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div class="timer-txt" id="m-timer" data-i18n="timer_zero">Temps : 0s</div>
   </div>
   <div class="board-wrap"><div class="board" id="m-board"></div></div>
+
+  <!-- Quiz aléatoire module 2 -->
+  <div class="rquiz-panel" id="m-rquiz-panel" style="display:none">
+    <div class="rquiz-header">
+      <span class="rquiz-title" data-i18n="rq_title">🎲 Quiz aléatoire</span>
+      <span class="rquiz-progress" id="m-rquiz-progress"></span>
+    </div>
+
+    <!-- Setup -->
+    <div id="m-rquiz-setup">
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
+        <span data-i18n="rq_m_desc">Choisissez un mode et un nombre de questions, puis lancez le chrono.<br><strong style="color:#4c1d95">🔍 Trouver la note</strong> — une case s'allume, cliquez la bonne note parmi les 12.<br><strong style="color:#4c1d95">📍 Placer la note</strong> — une note est affichée, trouvez toutes ses cases puis validez.</span>
+      </p>
+      <div class="panel-label" style="margin-bottom:10px">Mode</div>
+      <div class="rquiz-mode-tabs">
+        <span class="rquiz-mode-tab active" id="m-rq-tab-find" onclick="mRqSetMode('find',this)" data-i18n="rq_mode_find">🔍 Trouver la note</span>
+        <span class="rquiz-mode-tab"        id="m-rq-tab-place" onclick="mRqSetMode('place',this)" data-i18n="rq_mode_place">📍 Placer la note</span>
+      </div>
+      <div class="panel-label" style="margin-bottom:10px" data-i18n="rq_nb_q">Nombre de questions</div>
+      <div class="rquiz-setup">
+        <input class="rquiz-count-input" type="number" id="m-rquiz-count" min="1" max="50" value="10" onfocus="this.select()">
+        <button class="btn btn-rquiz" onclick="mRqStart()" data-i18n="rq_start">▶ Démarrer</button>
+      </div>
+    </div>
+
+    <!-- Question -->
+    <div id="m-rquiz-question" style="display:none">
+      <div class="rquiz-question" id="m-rquiz-q-text"></div>
+      <div id="m-rquiz-place-info" style="display:none;margin-bottom:10px;">
+        <span style="font-size:13px;color:var(--muted);font-weight:600" id="m-rquiz-place-counter"></span>
+        <button class="btn btn-gray" id="m-rquiz-hint-btn" onclick="mRqShowHint()" style="margin-left:12px;padding:4px 12px;font-size:12px">💡 Indice</button>
+        <span id="m-rquiz-hint-txt" style="display:none;font-size:13px;color:#7c3aed;font-weight:700;margin-left:8px"></span>
+      </div>
+      <div class="rquiz-note-pills" id="m-rquiz-pills"></div>
+      <div class="rquiz-feedback" id="m-rquiz-feedback"></div>
+      <div class="btn-row">
+        <button class="btn btn-rquiz" id="m-rquiz-validate" onclick="mRqValidatePlace()" style="display:none">✓ Valider</button>
+        <button class="btn btn-rquiz" id="m-rquiz-next" onclick="mRqNext()" style="display:none" data-i18n="rq_next">Suivant →</button>
+        <button class="btn btn-rquiz-stop" onclick="mRqStop()" data-i18n="rq_stop">⏹ Arrêter</button>
+      </div>
+    </div>
+
+    <!-- Résultat final -->
+    <div id="m-rquiz-result" style="display:none">
+      <div class="rquiz-score-final" id="m-rquiz-score-final"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn btn-rquiz" onclick="mRqRestart()" data-i18n="rq_restart">↺ Recommencer</button>
+        <button class="btn btn-gray"  onclick="mRqClose()" data-i18n="rq_close">Fermer</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ══ MODULE 3 — GAMMES SUR LE MANCHE ══ -->
@@ -440,6 +746,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <button class="btn btn-gray"    id="gm-btn-reset"    onclick="gmReset()" data-i18n="btn_reset">Reset</button>
       <button class="btn btn-quiz"    id="gm-btn-quiz"     onclick="gmStartQuiz()" data-i18n="btn_quiz">Quiz</button>
       <button class="btn btn-stop"    id="gm-btn-stop"     onclick="gmStopQuizManual()" style="display:none" data-i18n="btn_stop">⏹ Arrêter & corriger</button>
+      <button class="btn btn-rquiz"  id="gm-btn-rquiz"  onclick="gmRqOpen()" data-i18n="btn_rquiz">🎲 Quiz aléatoire</button>
     </div>
     <div class="score-row">
       <span class="score-badge" id="gm-badge-ok">  <span class="score-dot dot-green"></span><span id="gm-cnt-ok">0</span></span>
@@ -452,6 +759,46 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div>
 
   <div class="board-wrap"><div class="board" id="gm-board"></div></div>
+
+  <!-- Quiz aléatoire module 3 -->
+  <div class="rquiz-panel" id="gm-rquiz-panel" style="display:none">
+    <div class="rquiz-header">
+      <span class="rquiz-title" data-i18n="rq_title">🎲 Quiz aléatoire</span>
+      <span class="rquiz-progress" id="gm-rquiz-progress"></span>
+    </div>
+
+    <!-- Setup -->
+    <div id="gm-rquiz-setup">
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
+        <span data-i18n="rq_gm_desc">Une case aléatoire de la gamme s'allume sans afficher son nom. Identifiez-la parmi les 12 notes proposées. Feedback immédiat, puis cliquez <strong style="color:#4c1d95" data-i18n="rq_next">Suivant</strong>.</span>
+      </p>
+      <div class="panel-label" style="margin-bottom:10px" data-i18n="rq_nb_q">Nombre de questions</div>
+      <div class="rquiz-setup">
+        <input class="rquiz-count-input" type="number" id="gm-rquiz-count" min="1" max="50" value="10" onfocus="this.select()">
+        <button class="btn btn-rquiz" onclick="gmRqStart()" data-i18n="rq_start">▶ Démarrer</button>
+      </div>
+    </div>
+
+    <!-- Question -->
+    <div id="gm-rquiz-question" style="display:none">
+      <div class="rquiz-question" id="gm-rquiz-q-text"></div>
+      <div class="rquiz-note-pills" id="gm-rquiz-pills"></div>
+      <div class="rquiz-feedback" id="gm-rquiz-feedback"></div>
+      <div class="btn-row">
+        <button class="btn btn-rquiz" id="gm-rquiz-next" onclick="gmRqNext()" style="display:none" data-i18n="rq_next">Suivant →</button>
+        <button class="btn btn-rquiz-stop" onclick="gmRqStop()" data-i18n="rq_stop">⏹ Arrêter</button>
+      </div>
+    </div>
+
+    <!-- Résultat final -->
+    <div id="gm-rquiz-result" style="display:none">
+      <div class="rquiz-score-final" id="gm-rquiz-score-final"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn btn-rquiz" onclick="gmRqRestart()" data-i18n="rq_restart">↺ Recommencer</button>
+        <button class="btn btn-gray"  onclick="gmRqClose()" data-i18n="rq_close">Fermer</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -559,33 +906,104 @@ function selectMode(el) {
 }
 
 function gBuildAnswers() {
+  // Rebuild hidden pills (used for quiz logic)
   const div = document.getElementById('g-answers');
   div.innerHTML = '';
   getNoteList(gAlt).forEach(({ display, chromatic }) => {
     const p = document.createElement('span');
     p.className = 'pill'; p.textContent = display;
     p.dataset.chromatic = chromatic; p.dataset.selected = 'false';
-    p.onclick = () => {
-      if (gQuizMode) { gQuizPillClick(p); return; }
-      p.dataset.selected = p.dataset.selected === 'true' ? 'false' : 'true';
-      p.classList.toggle('active', p.dataset.selected === 'true');
-    };
     div.appendChild(p);
   });
+  // Build the visual chromatic wheel
+  gBuildWheel();
+}
+
+function gBuildWheel() {
+  const wheel   = document.getElementById('g-wheel');
+  const center  = document.getElementById('g-wheel-center');
+  // Remove old note nodes (keep center)
+  wheel.querySelectorAll('.wheel-note').forEach(n => n.remove());
+
+  const noteList = getNoteList(gAlt);
+  const total    = noteList.length; // always 12
+  const R        = 118; // radius in px
+  const cx = 160, cy = 160; // center of 320x320
+
+  noteList.forEach(({ display, chromatic }, idx) => {
+    const angle = (idx / total) * 2 * Math.PI - Math.PI / 2; // start at top
+    const x = cx + R * Math.cos(angle);
+    const y = cy + R * Math.sin(angle);
+    const isAccidental = NOTES_SHARP[chromatic].includes('#');
+
+    const node = document.createElement('div');
+    node.className = 'wheel-note' + (isAccidental ? ' accidental' : '');
+    node.style.left = x + 'px';
+    node.style.top  = y + 'px';
+    node.dataset.chromatic = chromatic;
+    node.dataset.selected  = 'false';
+    node.innerHTML = display.replace(' / ', '<br>');
+
+    node.onclick = () => {
+      if (gQuizMode) { gQuizWheelClick(node); return; }
+      const sel = node.dataset.selected === 'true';
+      node.dataset.selected = sel ? 'false' : 'true';
+      node.classList.toggle('active', !sel);
+      // Sync hidden pill
+      const pill = document.querySelector(`#g-answers .pill[data-chromatic="${chromatic}"]`);
+      if (pill) { pill.dataset.selected = node.dataset.selected; }
+      gUpdateWheelCenter();
+    };
+    wheel.appendChild(node);
+  });
+  gUpdateWheelCenter();
+}
+
+function gUpdateWheelCenter() {
+  const count = document.querySelectorAll('#g-wheel .wheel-note.active').length;
+  const center = document.getElementById('g-wheel-center');
+  if (count === 0) {
+    center.innerHTML = '12 notes<br>chromatiques';
+  } else {
+    center.innerHTML = '<span style="font-size:22px;font-weight:800;color:var(--accent)">' + count + '</span><br>sélectionnée' + (count > 1 ? 's' : '');
+  }
+}
+
+function gWheelNode(chromatic) {
+  return document.querySelector('#g-wheel .wheel-note[data-chromatic="' + chromatic + '"]');
+}
+
+function gQuizWheelClick(node) {
+  if (node.dataset.selected === 'true') return;
+  const chr = parseInt(node.dataset.chromatic);
+  const ok  = gQuizTargets.includes(chr);
+  if (ok) {
+    node.dataset.selected = 'true';
+    node.classList.add('active');
+    // Sync pill
+    const pill = document.querySelector(`#g-answers .pill[data-chromatic="${chr}"]`);
+    if (pill) pill.dataset.selected = 'true';
+  } else {
+    node.classList.add('w-wrong');
+    gWrongPills.add(node); // reuse wrong tracking
+    setTimeout(() => node.classList.remove('w-wrong'), 600);
+  }
+  gUpdateWheelCenter();
+  gUpdateInfo();
+  gCheckEnd();
 }
 
 function gCorrect() {
   if (gQuizMode) return;
   const correct = getScaleChromatic(gCurrentRootChromatic, gCurrentMode);
   let ok = 0, bad = 0, miss = 0;
-  document.querySelectorAll('#g-answers .pill').forEach(p => {
-    p.classList.remove('active');
-    const chr = parseInt(p.dataset.chromatic);
-    const inC = correct.includes(chr), inS = p.dataset.selected === 'true';
-    if      (inS && inC)  { p.style.background='#86efac'; p.style.borderColor='#22c55e'; ok++;   }
-    else if (inS && !inC) { p.style.background='#fca5a5'; p.style.borderColor='#ef4444'; bad++;  }
-    else if (!inS && inC) { p.style.background='#fdba74'; p.style.borderColor='#f97316'; miss++; }
-    else                  { p.style.background=''; p.style.borderColor=''; }
+  document.querySelectorAll('#g-wheel .wheel-note').forEach(node => {
+    node.classList.remove('w-correct','w-wrong','w-missed','active');
+    const chr = parseInt(node.dataset.chromatic);
+    const inC = correct.includes(chr), inS = node.dataset.selected === 'true';
+    if      (inS && inC)  { node.classList.add('w-correct'); ok++;   }
+    else if (inS && !inC) { node.classList.add('w-wrong');   bad++;  }
+    else if (!inS && inC) { node.classList.add('w-missed');  miss++; }
   });
   showScoreBadges('g', ok, bad, miss);
   gShowCorrectScale(correct);
@@ -608,10 +1026,16 @@ function gShowCorrectScale(chrArr) {
 function gReset() {
   if (gQuizMode) gStopQuiz();
   gWrongPills.clear();
+  // Reset pills (hidden)
   document.querySelectorAll('#g-answers .pill').forEach(p => {
-    p.dataset.selected = 'false'; p.style.background = ''; p.style.borderColor = '';
-    p.classList.remove('active');
+    p.dataset.selected = 'false';
   });
+  // Reset wheel nodes
+  document.querySelectorAll('#g-wheel .wheel-note').forEach(node => {
+    node.dataset.selected = 'false';
+    node.className = 'wheel-note' + (NOTES_SHARP[parseInt(node.dataset.chromatic)].includes('#') ? ' accidental' : '');
+  });
+  gUpdateWheelCenter();
   hideBadges('g');
   document.getElementById('g-score-msg').textContent = '';
   document.getElementById('g-quiz-info').textContent = '';
@@ -676,14 +1100,14 @@ function gQuizPillClick(p) {
 
 function gUpdateInfo() {
   const rem = gQuizTargets.filter(chr =>
-    !document.querySelector(`#g-answers .pill[data-chromatic="${chr}"][data-selected="true"]`)
+    !document.querySelector(`#g-wheel .wheel-note[data-chromatic="${chr}"][data-selected="true"]`)
   ).length;
   document.getElementById('g-quiz-info').textContent = rem > 0 ? T('rem_fmt', rem) : '';
 }
 
 function gCheckEnd() {
   if (gQuizTargets.filter(chr =>
-    !document.querySelector(`#g-answers .pill[data-chromatic="${chr}"][data-selected="true"]`)
+    !document.querySelector(`#g-wheel .wheel-note[data-chromatic="${chr}"][data-selected="true"]`)
   ).length === 0) {
     gStopQuiz();
     document.getElementById('g-score-msg').textContent = T('quiz_done', gTime);
@@ -693,25 +1117,15 @@ function gCheckEnd() {
 
 function gShowQuizResult() {
   let ok=0, bad=0, miss=0;
-  document.querySelectorAll('#g-answers .pill').forEach(p => {
-    const chr      = parseInt(p.dataset.chromatic);
+  document.querySelectorAll('#g-wheel .wheel-note').forEach(node => {
+    const chr      = parseInt(node.dataset.chromatic);
     const isTarget = gQuizTargets.includes(chr);
-    const selected = p.dataset.selected === 'true';
-    const wasWrong = gWrongPills.has(p);
-
-    p.classList.remove('active');
-    p.style.background = ''; p.style.borderColor = '';
-
-    if (selected && isTarget) {
-      ok++;
-      p.style.background='#86efac'; p.style.borderColor='#22c55e';
-    } else if (!selected && isTarget) {
-      miss++;
-      p.style.background='#fdba74'; p.style.borderColor='#f97316';
-    } else if (wasWrong) {
-      bad++;
-      p.style.background='#fca5a5'; p.style.borderColor='#ef4444';
-    }
+    const selected = node.dataset.selected === 'true';
+    const wasWrong = gWrongPills.has(node);
+    node.classList.remove('active','w-correct','w-wrong','w-missed');
+    if (selected && isTarget)  { node.classList.add('w-correct'); ok++;   }
+    else if (!selected && isTarget) { node.classList.add('w-missed');  miss++; }
+    else if (wasWrong)         { node.classList.add('w-wrong');   bad++;  }
   });
   showScoreBadges('g', ok, bad, miss);
   gShowCorrectScale(gQuizTargets);
@@ -855,7 +1269,7 @@ function mBuildBoard() {
 function calcCellWidth(prefix) {
   // Pour le module manche : on utilise 1fr via CSS, pas de taille fixe
   // Pour le module gammes-manche : taille fixe calculée
-  if (prefix === 'm') return null; // signale qu'on utilise 1fr
+  if (prefix === 'm') return null; // signale que l'on utilise 1fr
   const pageEl = document.getElementById('page-gammes-manche');
   const avail  = (pageEl ? pageEl.clientWidth : window.innerWidth) - 48 - 40 - 20;
   const ideal  = Math.floor(avail / FRETS);
@@ -1330,6 +1744,549 @@ function gmSetButtons(active) {
   document.getElementById('gm-btn-stop').style.display=active?'inline-block':'none';
 }
 
+
+/* ══════════════════════════════════════════
+   UTILITAIRE : tirage sans remise (shuffle bag)
+══════════════════════════════════════════ */
+function shuffleBag(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function bagInit(pool) {
+  return { deck: shuffleBag([...pool]), pool: [...pool] };
+}
+
+function bagPick(bagState) {
+  if (bagState.deck.length === 0) {
+    bagState.deck = shuffleBag([...bagState.pool]);
+  }
+  return bagState.deck.shift();
+}
+
+/* ══════════════════════════════════════════
+   MODULE 1 — QUIZ OUI / NON
+══════════════════════════════════════════ */
+let gYnTotal    = 12;
+let gYnCurrent  = 0;
+let gYnScore    = 0;
+let gYnAnswered = false;
+let gYnCurrentChr = null;
+let gYnBag = bagInit([...Array(12).keys()]);
+
+function gYnOpen() {
+  document.getElementById('g-yn-panel').style.display = 'block';
+  document.getElementById('g-yn-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  gYnShowSetup();
+}
+
+function gYnClose() {
+  document.getElementById('g-yn-panel').style.display = 'none';
+}
+
+function gYnShowSetup() {
+  document.getElementById('g-yn-setup').style.display    = 'block';
+  document.getElementById('g-yn-question').style.display = 'none';
+  document.getElementById('g-yn-result').style.display   = 'none';
+  document.getElementById('g-yn-progress').textContent   = '';
+}
+
+function gYnStart() {
+  gYnTotal    = Math.max(1, Math.min(50, parseInt(document.getElementById('g-yn-count').value) || 12));
+  gYnCurrent  = 0;
+  gYnScore    = 0;
+  gYnAnswered = false;
+  gYnBag = bagInit([...Array(12).keys()]);
+  document.getElementById('g-yn-setup').style.display    = 'none';
+  document.getElementById('g-yn-result').style.display   = 'none';
+  document.getElementById('g-yn-question').style.display = 'block';
+  gYnNextQuestion();
+}
+
+function gYnNextQuestion() {
+  gYnAnswered = false;
+  gYnCurrent++;
+  document.getElementById('g-yn-next').style.display    = 'none';
+  document.getElementById('g-yn-feedback').textContent  = '';
+  document.getElementById('g-yn-feedback').className    = 'rquiz-feedback';
+  document.getElementById('g-yn-yes').disabled          = false;
+  document.getElementById('g-yn-no').disabled           = false;
+  document.getElementById('g-yn-progress').textContent  = T('rq_progress_fmt', gYnCurrent, gYnTotal);
+
+  gYnCurrentChr = bagPick(gYnBag);
+  const noteList = getNoteList(gAlt);
+  const entry    = noteList.find(e => e.chromatic === gYnCurrentChr);
+  document.getElementById('g-yn-note').textContent = entry ? entry.display : NOTES_SHARP[gYnCurrentChr];
+}
+
+function gYnAnswer(userSaysYes) {
+  if (gYnAnswered) return;
+  gYnAnswered = true;
+  document.getElementById('g-yn-yes').disabled = true;
+  document.getElementById('g-yn-no').disabled  = true;
+
+  const scaleChrs  = getScaleChromatic(gCurrentRootChromatic, gCurrentMode);
+  const isInScale  = scaleChrs.includes(gYnCurrentChr);
+  const isCorrect  = userSaysYes === isInScale;
+  const fb         = document.getElementById('g-yn-feedback');
+  const noteList   = getNoteList(gAlt);
+  const noteName   = (noteList.find(e => e.chromatic === gYnCurrentChr)?.display) || NOTES_SHARP[gYnCurrentChr];
+
+  if (isCorrect) {
+    gYnScore++;
+    fb.textContent = isInScale ? T('rq_correct_yes', noteName) : T('rq_correct_no', noteName);
+    fb.className = 'rquiz-feedback ok';
+  } else {
+    fb.textContent = isInScale ? T('rq_wrong_yes', noteName) : T('rq_wrong_no', noteName);
+    fb.className = 'rquiz-feedback bad';
+  }
+
+  if (gYnCurrent < gYnTotal) {
+    document.getElementById('g-yn-next').style.display = 'inline-block';
+  } else {
+    setTimeout(() => gYnFinish(), 400);
+  }
+}
+
+function gYnNext()    { gYnNextQuestion(); }
+
+function gYnFinish() {
+  document.getElementById('g-yn-question').style.display = 'none';
+  document.getElementById('g-yn-result').style.display   = 'block';
+  const pct   = Math.round(gYnScore / gYnTotal * 100);
+  const emoji = pct >= 80 ? '🎉' : pct >= 50 ? '👍' : '💪';
+  document.getElementById('g-yn-score-final').textContent = T('rq_score_fmt', gYnScore, gYnTotal, pct, false);
+}
+
+function gYnStop() {
+  document.getElementById('g-yn-question').style.display = 'none';
+  document.getElementById('g-yn-result').style.display   = 'block';
+  const pct   = gYnTotal > 0 ? Math.round(gYnScore / Math.max(gYnCurrent, 1) * 100) : 0;
+  const emoji = pct >= 80 ? '🎉' : pct >= 50 ? '👍' : '💪';
+  document.getElementById('g-yn-score-final').textContent = T('rq_score_fmt', gYnScore, gYnCurrent > 0 ? gYnCurrent : 0, pct, true);
+}
+function gYnRestart() { gYnShowSetup(); }
+
+/* ══════════════════════════════════════════
+   MODULE 2 — QUIZ ALÉATOIRE
+══════════════════════════════════════════ */
+let mRqMode      = 'find';   // find: case lights up, user finds note | place: note shown, user finds cell
+let mRqTotal     = 10;
+let mRqCurrent   = 0;
+let mRqScore     = 0;
+let mRqAnswered  = false;
+let mRqActiveCell = null;   // cellule allumée pour la question en cours
+let mRqPlaceChr  = null;
+let mRqFindBag   = null;
+let mRqPlaceBag  = null;
+
+function mRqOpen() {
+  document.getElementById('m-rquiz-panel').style.display = 'block';
+  document.getElementById('m-rquiz-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  mRqShowSetup();
+}
+
+function mRqClose() {
+  mRqClearHighlight();
+  document.getElementById('m-rquiz-panel').style.display = 'none';
+}
+
+function mRqSetMode(mode, el) {
+  mRqMode = mode;
+  document.querySelectorAll('#m-rquiz-setup .rquiz-mode-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function mRqShowSetup() {
+  document.getElementById('m-rquiz-setup').style.display = 'block';
+  document.getElementById('m-rquiz-question').style.display = 'none';
+  document.getElementById('m-rquiz-result').style.display = 'none';
+  document.getElementById('m-rquiz-progress').textContent = '';
+}
+
+function mRqStart() {
+  mRqTotal    = Math.max(1, Math.min(50, parseInt(document.getElementById('m-rquiz-count').value) || 10));
+  mRqCurrent  = 0;
+  mRqScore    = 0;
+  mRqAnswered = false;
+  // Init bags avec la zone actuelle — ne change pas pendant le quiz
+  const _activeChr = [...new Set(mGetActiveCells().map(c => parseInt(c.dataset.chromatic)))];
+  mRqFindBag  = bagInit(_activeChr);
+  mRqPlaceBag = bagInit(_activeChr);
+  document.getElementById('m-rquiz-setup').style.display = 'none';
+  document.getElementById('m-rquiz-result').style.display = 'none';
+  document.getElementById('m-rquiz-question').style.display = 'block';
+  mRqNextQuestion();
+}
+
+function mRqNextQuestion() {
+  // Nettoyage direct via le DOM — préserve out-of-range
+  document.querySelectorAll('#m-board .gcell').forEach(c => {
+    const outOfRange = c.classList.contains('out-of-range');
+    c.className = 'gcell';
+    if (outOfRange) c.classList.add('out-of-range');
+  });
+  mRqActiveCell = null;
+  mRqPlaceSelected = new Set();
+  mRqPlaceTargets  = [];
+  mRqDisablePlaceClicks();
+  const pi = document.getElementById('m-rquiz-place-info');
+  const vl = document.getElementById('m-rquiz-validate');
+  if (pi) pi.style.display = 'none';
+  if (vl) vl.style.display = 'none';
+  mRqAnswered = false;
+  mRqCurrent++;
+  document.getElementById('m-rquiz-next').style.display = 'none';
+  document.getElementById('m-rquiz-feedback').textContent = '';
+  document.getElementById('m-rquiz-feedback').className = 'rquiz-feedback';
+  document.getElementById('m-rquiz-progress').textContent = T('rq_progress_fmt', mRqCurrent, mRqTotal);
+
+  // Choisir une cellule aléatoire dans la zone active
+  const active = mGetActiveCells();
+  if (!active.length) { alert(T('alert_no_target')); mRqShowSetup(); return; }
+  const availChr = [...new Set(active.map(c => parseInt(c.dataset.chromatic)))];
+  const pickedChr = bagPick(mRqFindBag);
+  const cellsForChr = active.filter(c => parseInt(c.dataset.chromatic) === pickedChr);
+  mRqActiveCell = cellsForChr[Math.floor(Math.random() * cellsForChr.length)];
+  const chr = parseInt(mRqActiveCell.dataset.chromatic);
+
+  // Allumer la case
+  mRqActiveCell.classList.add('rquiz-cell-highlight');
+
+  if (mRqMode === 'find') {
+    // Mode "Trouver la note" : case allumée, choisir parmi les 12 pastilles
+    document.getElementById('m-rquiz-q-text').textContent = T('rq_find_q');
+    document.getElementById('m-rquiz-pills').style.display = 'flex';
+    if (document.getElementById('m-rquiz-place-info')) document.getElementById('m-rquiz-place-info').style.display = 'none';
+    mRqBuildNotePills(chr, 'm');
+    mRqPlaceChr = null;
+  } else {
+    // Mode "Placer la note"
+    // 1. Retirer rquiz-cell-highlight ajouté juste avant (on ne veut pas montrer la case)
+    if (mRqActiveCell) { mRqActiveCell.classList.remove('rquiz-cell-highlight'); mRqActiveCell = null; }
+    // 2. Choisir la note cible via le bag (tirage sans remise)
+    const activeChrSet = [...new Set(mGetActiveCells().map(c => parseInt(c.dataset.chromatic)))];
+    mRqPlaceChr = bagPick(mRqPlaceBag);
+    mRqPlaceTargets  = mGetActiveCells().filter(c => parseInt(c.dataset.chromatic) === mRqPlaceChr);
+    mRqPlaceSelected = new Set();
+    document.getElementById('m-rquiz-q-text').innerHTML =
+      '<strong style="font-size:18px;color:#7c3aed">' + T('rq_find_place_q', noteDisplayFull(mRqPlaceChr)) + '</strong>';
+    document.getElementById('m-rquiz-pills').style.display = 'none';
+    document.getElementById('m-rquiz-pills').innerHTML = '';
+    document.getElementById('m-rquiz-place-info').style.display = 'block';
+    const ctrEl = document.getElementById('m-rquiz-place-counter');
+    ctrEl.textContent = ''; ctrEl.style.display = 'none';
+    document.getElementById('m-rquiz-hint-btn').style.display = 'inline-block';
+    document.getElementById('m-rquiz-hint-txt').style.display = 'none';
+    document.getElementById('m-rquiz-validate').style.display = 'none';
+    mRqEnablePlaceClicks();
+  }
+}
+
+let mRqPlaceTargets  = [];
+let mRqPlaceSelected = new Set();
+
+function mRqEnablePlaceClicks() {
+  mGetActiveCells().forEach(c => {
+    c._rqPlaceHandler = () => mRqPlaceClick(c);
+    c.addEventListener('click', c._rqPlaceHandler);
+  });
+}
+
+function mRqDisablePlaceClicks() {
+  mGetActiveCells().forEach(c => {
+    if (c._rqPlaceHandler) {
+      c.removeEventListener('click', c._rqPlaceHandler);
+      delete c._rqPlaceHandler;
+    }
+  });
+}
+
+function mRqPlaceClick(c) {
+  if (mRqAnswered) return;
+  // Toggle sélection
+  if (mRqPlaceSelected.has(c)) {
+    mRqPlaceSelected.delete(c);
+    c.classList.remove('rquiz-cell-selected');
+  } else {
+    mRqPlaceSelected.add(c);
+    c.classList.add('rquiz-cell-selected');
+  }
+  const total = mRqPlaceTargets.length;
+  const sel   = mRqPlaceSelected.size;
+  // Mettre à jour le compteur seulement s'il est visible (indice demandé)
+  const ctr = document.getElementById('m-rquiz-place-counter');
+  if (ctr.style.display !== 'none') {
+    ctr.textContent = sel + ' / ' + total + ' case' + (total > 1 ? 's' : '') + ' sélectionnée' + (sel > 1 ? 's' : '');
+  }
+  // Bouton Valider visible quand le bon nombre est atteint
+  document.getElementById('m-rquiz-validate').style.display = sel === total ? 'inline-block' : 'none';
+}
+
+function mRqValidatePlace() {
+  if (mRqAnswered) return;
+  mRqAnswered = true;
+  mRqDisablePlaceClicks();
+  document.getElementById('m-rquiz-validate').style.display = 'none';
+  const fb = document.getElementById('m-rquiz-feedback');
+  const allCorrect = [...mRqPlaceSelected].every(c => mRqPlaceTargets.includes(c))
+                  && mRqPlaceTargets.every(c => mRqPlaceSelected.has(c));
+  mRqPlaceSelected.forEach(c => {
+    c.classList.remove('rquiz-cell-selected');
+    c.classList.add(mRqPlaceTargets.includes(c) ? 'correct' : 'wrong');
+  });
+  mRqPlaceTargets.forEach(c => { if (!mRqPlaceSelected.has(c)) c.classList.add('missed'); });
+  if (allCorrect) {
+    mRqScore++;
+    fb.textContent = T('rq_perfect');
+    fb.className = 'rquiz-feedback ok';
+  } else {
+    fb.textContent = T('rq_partial');
+    fb.className = 'rquiz-feedback bad';
+  }
+  if (mRqCurrent < mRqTotal) {
+    document.getElementById('m-rquiz-next').style.display = 'inline-block';
+  } else {
+    setTimeout(() => mRqFinish('m'), 1200);
+  }
+}
+
+function mRqShowHint() {
+  const total = mRqPlaceTargets.length;
+  const sel   = mRqPlaceSelected.size;
+  const ctr   = document.getElementById('m-rquiz-place-counter');
+  ctr.textContent = sel + ' / ' + total + ' case' + (total > 1 ? 's' : '') + ' sélectionnée' + (sel > 1 ? 's' : '');
+  ctr.style.display = 'inline';
+  document.getElementById('m-rquiz-hint-btn').style.display = 'none';
+}
+
+// Retourne le nom complet d'une note avec son enharmonique si altérée
+function noteDisplayFull(chr) {
+  const ns = NOTES_SHARP[chr];
+  const nf = NOTES_FLAT[chr];
+  return ns.includes('#') ? ns + ' / ' + nf : ns;
+}
+
+function mRqBuildNotePills(correctChr, prefix) {
+  const div = document.getElementById(prefix + '-rquiz-pills');
+  div.innerHTML = '';
+  // 12 pastilles dans un ordre aléatoire
+  const order = [...Array(12).keys()].sort(() => Math.random() - 0.5);
+  order.forEach(chr => {
+    const p = document.createElement('span');
+    p.className = 'rquiz-pill';
+    p.textContent = noteDisplayFull(chr);
+    p.dataset.chromatic = chr;
+    p.onclick = () => mRqAnswer(p, chr === correctChr, correctChr, prefix);
+    div.appendChild(p);
+  });
+}
+
+function mRqBuildTrueFalsePills(correctChr, prefix) {
+  const div = document.getElementById(prefix + '-rquiz-pills');
+  div.innerHTML = '';
+  // 4 options : la bonne + 3 fausses
+  const all = [...Array(12).keys()].filter(c => c !== correctChr);
+  const distractors = all.sort(() => Math.random() - 0.5).slice(0, 3);
+  const options = [correctChr, ...distractors].sort(() => Math.random() - 0.5);
+  options.forEach(chr => {
+    const p = document.createElement('span');
+    p.className = 'rquiz-pill';
+    p.textContent = noteDisplayFull(chr);
+    p.dataset.chromatic = chr;
+    p.onclick = () => mRqAnswer(p, chr === correctChr, correctChr, prefix);
+    div.appendChild(p);
+  });
+}
+
+function mRqAnswer(pill, isCorrect, correctChr, prefix) {
+  if (mRqAnswered) return;
+  mRqAnswered = true;
+  const fb = document.getElementById(prefix + '-rquiz-feedback');
+  // Colorier toutes les pastilles
+  document.querySelectorAll('#' + prefix + '-rquiz-pills .rquiz-pill').forEach(p => {
+    const chr = parseInt(p.dataset.chromatic);
+    if (chr === correctChr) p.classList.add('correct');
+    else if (p === pill)    p.classList.add('wrong');
+    else                    p.classList.add('locked');
+  });
+  if (isCorrect) {
+    mRqScore++;
+    fb.textContent = T('rq_correct_fb');
+    fb.className = 'rquiz-feedback ok';
+  } else {
+    fb.textContent = T('rq_wrong_fb', noteDisplayFull(correctChr));
+    fb.className = 'rquiz-feedback bad';
+  }
+  if (mRqCurrent < mRqTotal) {
+    document.getElementById(prefix + '-rquiz-next').style.display = 'inline-block';
+  } else {
+    setTimeout(() => mRqFinish(prefix), 800);
+  }
+}
+
+function mRqNext() { mRqNextQuestion(); }
+
+function mRqFinish(prefix) {
+  mRqClearHighlight();
+  const p = prefix || 'm';
+  document.getElementById(p + '-rquiz-question').style.display = 'none';
+  document.getElementById(p + '-rquiz-result').style.display   = 'block';
+  const pct = Math.round(mRqScore / mRqTotal * 100);
+  const emoji = pct >= 80 ? '🎉' : pct >= 50 ? '👍' : '💪';
+  document.getElementById(p + '-rquiz-score-final').textContent = T('rq_score_fmt', mRqScore, mRqTotal, pct, false);
+}
+
+function mRqStop()    { mRqClearHighlight(); mRqFinish('m'); }
+function mRqRestart() { mRqShowSetup(); }
+
+function mRqClearHighlight() {
+  mRqActiveCell = null;
+  mRqPlaceSelected = new Set();
+  mRqPlaceTargets  = [];
+  mRqDisablePlaceClicks();
+  // Nettoyer toutes les cases sans exception
+  mCells.forEach(c => {
+    c.classList.remove('rquiz-cell-highlight','rquiz-cell-selected','correct','wrong','missed');
+  });
+  const pi = document.getElementById('m-rquiz-place-info');
+  const vl = document.getElementById('m-rquiz-validate');
+  if (pi) pi.style.display = 'none';
+  if (vl) vl.style.display = 'none';
+}
+
+/* ══════════════════════════════════════════
+   MODULE 3 — QUIZ ALÉATOIRE
+══════════════════════════════════════════ */
+let gmRqTotal    = 10;
+let gmRqCurrent  = 0;
+let gmRqScore    = 0;
+let gmRqAnswered = false;
+let gmRqActiveCell = null;
+let gmRqBag = null;
+
+function gmRqOpen() {
+  document.getElementById('gm-rquiz-panel').style.display = 'block';
+  document.getElementById('gm-rquiz-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  gmRqShowSetup();
+}
+
+function gmRqClose() {
+  gmRqClearHighlight();
+  document.getElementById('gm-rquiz-panel').style.display = 'none';
+}
+
+function gmRqShowSetup() {
+  document.getElementById('gm-rquiz-setup').style.display   = 'block';
+  document.getElementById('gm-rquiz-question').style.display = 'none';
+  document.getElementById('gm-rquiz-result').style.display   = 'none';
+  document.getElementById('gm-rquiz-progress').textContent   = '';
+}
+
+function gmRqStart() {
+  const targetChr = getScaleChromatic(gmCurrentRootChromatic, gmCurrentMode);
+  const activeCells = gmGetActiveCells().filter(c => targetChr.includes(parseInt(c.dataset.chromatic)));
+  if (!activeCells.length) { alert(T('alert_no_gm')); return; }
+  gmRqTotal    = Math.max(1, Math.min(50, parseInt(document.getElementById('gm-rquiz-count').value) || 10));
+  gmRqCurrent  = 0;
+  gmRqScore    = 0;
+  gmRqAnswered = false;
+  // Init bag avec les notes de la gamme disponibles dans la zone
+  const _gmActiveChr = [...new Set(gmGetActiveCells()
+    .filter(c => getScaleChromatic(gmCurrentRootChromatic, gmCurrentMode).includes(parseInt(c.dataset.chromatic)))
+    .map(c => parseInt(c.dataset.chromatic)))];
+  gmRqBag = bagInit(_gmActiveChr.length ? _gmActiveChr : [0]);
+  document.getElementById('gm-rquiz-setup').style.display   = 'none';
+  document.getElementById('gm-rquiz-result').style.display   = 'none';
+  document.getElementById('gm-rquiz-question').style.display = 'block';
+  gmRqNextQuestion();
+}
+
+function gmRqNextQuestion() {
+  gmRqClearHighlight();
+  gmRqAnswered = false;
+  gmRqCurrent++;
+  document.getElementById('gm-rquiz-next').style.display   = 'none';
+  document.getElementById('gm-rquiz-feedback').textContent = '';
+  document.getElementById('gm-rquiz-feedback').className   = 'rquiz-feedback';
+  document.getElementById('gm-rquiz-progress').textContent = T('rq_progress_fmt', gmRqCurrent, gmRqTotal);
+
+  // Choisir une cellule aléatoire DANS la gamme et dans la zone active
+  const targetChr   = getScaleChromatic(gmCurrentRootChromatic, gmCurrentMode);
+  const activeCells = gmGetActiveCells().filter(c => targetChr.includes(parseInt(c.dataset.chromatic)));
+  if (!activeCells.length) { gmRqStop(); return; }
+  const gmAvailChr = [...new Set(activeCells.map(c => parseInt(c.dataset.chromatic)))];
+  const gmPickedChr = bagPick(gmRqBag);
+  const gmCellsForChr = activeCells.filter(c => parseInt(c.dataset.chromatic) === gmPickedChr);
+  gmRqActiveCell = gmCellsForChr[Math.floor(Math.random() * gmCellsForChr.length)];
+  const chr = parseInt(gmRqActiveCell.dataset.chromatic);
+
+  // Allumer la case (sans afficher le nom)
+  gmRqActiveCell.classList.add('rquiz-cell-highlight');
+
+  document.getElementById('gm-rquiz-q-text').textContent = T('rq_find_q');
+
+  // 12 pastilles dans un ordre aléatoire
+  const div = document.getElementById('gm-rquiz-pills');
+  div.innerHTML = '';
+  const order = [...Array(12).keys()].sort(() => Math.random() - 0.5);
+  order.forEach(c => {
+    const p = document.createElement('span');
+    p.className = 'rquiz-pill';
+    p.textContent = noteDisplayFull(c);
+    p.dataset.chromatic = c;
+    p.onclick = () => gmRqAnswer(p, c === chr, chr);
+    div.appendChild(p);
+  });
+}
+
+function gmRqAnswer(pill, isCorrect, correctChr) {
+  if (gmRqAnswered) return;
+  gmRqAnswered = true;
+  const fb = document.getElementById('gm-rquiz-feedback');
+  document.querySelectorAll('#gm-rquiz-pills .rquiz-pill').forEach(p => {
+    const c = parseInt(p.dataset.chromatic);
+    if (c === correctChr) p.classList.add('correct');
+    else if (p === pill)  p.classList.add('wrong');
+    else                  p.classList.add('locked');
+  });
+  if (isCorrect) {
+    gmRqScore++;
+    fb.textContent = T('rq_correct_fb');
+    fb.className   = 'rquiz-feedback ok';
+  } else {
+    fb.textContent = T('rq_wrong_fb', noteDisplayFull(correctChr));
+    fb.className   = 'rquiz-feedback bad';
+  }
+  if (gmRqCurrent < gmRqTotal) {
+    document.getElementById('gm-rquiz-next').style.display = 'inline-block';
+  } else {
+    setTimeout(() => gmRqFinish(), 800);
+  }
+}
+
+function gmRqNext()    { gmRqNextQuestion(); }
+
+function gmRqFinish() {
+  gmRqClearHighlight();
+  document.getElementById('gm-rquiz-question').style.display = 'none';
+  document.getElementById('gm-rquiz-result').style.display   = 'block';
+  const pct   = Math.round(gmRqScore / gmRqTotal * 100);
+  const emoji = pct >= 80 ? '🎉' : pct >= 50 ? '👍' : '💪';
+  document.getElementById('gm-rquiz-score-final').textContent = T('rq_score_fmt', gmRqScore, gmRqTotal, pct, false);
+}
+
+function gmRqStop()    { gmRqClearHighlight(); gmRqFinish(); }
+function gmRqRestart() { gmRqShowSetup(); }
+
+function gmRqClearHighlight() {
+  if (gmRqActiveCell) { gmRqActiveCell.classList.remove('rquiz-cell-highlight'); gmRqActiveCell = null; }
+}
+
 /* ══════════════════════════
    INTERNATIONALISATION
 ══════════════════════════ */
@@ -1384,6 +2341,38 @@ const LANG = {
     alert_select:    'Sélectionne des notes',
     alert_no_target: 'Aucune note cible sur cette zone',
     alert_no_gm:     'Aucune note à trouver sur cette zone',
+    // Quiz aléatoires
+    btn_rquiz:       '🎲 Quiz aléatoire',
+    btn_yn:          '🎲 Quiz Oui / Non',
+    rq_title:        '🎲 Quiz aléatoire',
+    rq_title_yn:     '🎲 Quiz Oui / Non',
+    rq_nb_q:         'Nombre de questions',
+    rq_start:        '▶ Démarrer',
+    rq_next:         'Suivant →',
+    rq_stop:         '⏹ Arrêter',
+    rq_restart:      '↺ Recommencer',
+    rq_close:        'Fermer',
+    rq_mode_find:    '🔍 Trouver la note',
+    rq_mode_place:   '📍 Placer la note',
+    yn_yes:          '✓ Oui',
+    yn_no:           '✗ Non',
+    rq_progress_fmt: (c, t) => c + ' / ' + t,
+    rq_score_fmt:    (s, t, p, stopped) => (p>=80?'🎉':p>=50?'👍':'💪') + ' ' + s + ' / ' + t + ' (' + p + '%)' + (stopped ? ' — quiz interrompu' : ''),
+    rq_correct_yes:  (n) => '✓ Oui, ' + n + ' fait partie de la gamme !',
+    rq_correct_no:   (n) => '✓ Non, ' + n + ' ne fait pas partie de la gamme.',
+    rq_wrong_yes:    (n) => '✗ Si ! ' + n + ' fait partie de la gamme.',
+    rq_wrong_no:     (n) => '✗ Non, ' + n + ' ne fait pas partie de la gamme.',
+    rq_find_q:       'Quelle est cette note ?',
+    rq_find_place_q: (n) => 'Trouvez toutes les ' + n + ' sur le manche',
+    rq_correct_fb:   '✓ Correct !',
+    rq_wrong_fb:     (n) => '✗ C\'était : ' + n,
+    rq_perfect:      '✓ Parfait, toutes les cases trouvées !',
+    rq_partial:      '✗ Pas tout à fait — les cases manquantes sont en orange',
+    rq_yn_desc:      '<strong>Mode libre</strong> Une note s\'affiche — répondez <strong style="color:#22c55e">Oui</strong> si elle fait partie de la gamme, <strong style="color:#ef4444">Non</strong> sinon.',
+    rq_interrupted:  'quiz interrompu',
+    rq_yn_desc_full: "Une note s'affiche — répondez <strong style='color:#22c55e'>Oui</strong> si elle fait partie de la gamme, <strong style='color:#ef4444'>Non</strong> sinon. Feedback immédiat.",
+    rq_m_desc:       "Choisissez un mode et un nombre de questions, puis lancez le chrono.<br><strong style='color:#4c1d95'>🔍 Trouver la note</strong> — une case s'allume, cliquez la bonne note parmi les 12.<br><strong style='color:#4c1d95'>📍 Placer la note</strong> — une note est affichée, trouvez toutes ses cases puis validez.",
+    rq_gm_desc:      "Une case aléatoire de la gamme s'allume sans afficher son nom. Identifiez-la parmi les 12 notes proposées. Feedback immédiat, puis cliquez <strong style='color:#4c1d95'>Suivant</strong>.",
   },
   en: {
     logo:            '🎸 Guitar',
@@ -1435,6 +2424,38 @@ const LANG = {
     alert_select:    'Please select some notes',
     alert_no_target: 'No target notes in this zone',
     alert_no_gm:     'No notes to find in this zone',
+    // Random quizzes
+    btn_rquiz:       '🎲 Random quiz',
+    btn_yn:          '🎲 Yes / No quiz',
+    rq_title:        '🎲 Random quiz',
+    rq_title_yn:     '🎲 Yes / No quiz',
+    rq_nb_q:         'Number of questions',
+    rq_start:        '▶ Start',
+    rq_next:         'Next →',
+    rq_stop:         '⏹ Stop',
+    rq_restart:      '↺ Restart',
+    rq_close:        'Close',
+    rq_mode_find:    '🔍 Find the note',
+    rq_mode_place:   '📍 Place the note',
+    yn_yes:          '✓ Yes',
+    yn_no:           '✗ No',
+    rq_progress_fmt: (c, t) => c + ' / ' + t,
+    rq_score_fmt:    (s, t, p, stopped) => (p>=80?'🎉':p>=50?'👍':'💪') + ' ' + s + ' / ' + t + ' (' + p + '%)' + (stopped ? ' — quiz stopped' : ''),
+    rq_correct_yes:  (n) => '✓ Yes, ' + n + ' is in the scale!',
+    rq_correct_no:   (n) => '✓ Correct, ' + n + ' is not in the scale.',
+    rq_wrong_yes:    (n) => '✗ Actually, ' + n + ' is in the scale.',
+    rq_wrong_no:     (n) => '✗ Incorrect, ' + n + ' is not in the scale.',
+    rq_find_q:       'What note is this?',
+    rq_find_place_q: (n) => 'Find all the ' + n + ' on the fretboard',
+    rq_correct_fb:   '✓ Correct!',
+    rq_wrong_fb:     (n) => '✗ It was: ' + n,
+    rq_perfect:      '✓ Perfect, all positions found!',
+    rq_partial:      '✗ Not quite — missed positions are in orange',
+    rq_yn_desc:      'A note appears — answer <strong style="color:#22c55e">Yes</strong> if it belongs to the scale, <strong style="color:#ef4444">No</strong> otherwise.',
+    rq_interrupted:  'quiz stopped',
+    rq_yn_desc_full: "A note appears — answer <strong style='color:#22c55e'>Yes</strong> if it belongs to the scale, <strong style='color:#ef4444'>No</strong> otherwise. Immediate feedback.",
+    rq_m_desc:       "Choose a mode and a number of questions, then start.<br><strong style='color:#4c1d95'>🔍 Find the note</strong> — a cell lights up, click the correct note among the 12.<br><strong style='color:#4c1d95'>📍 Place the note</strong> — a note is shown, find all its positions then validate.",
+    rq_gm_desc:      "A random scale cell lights up without showing its name. Identify it among the 12 notes. Immediate feedback, then click <strong style='color:#4c1d95'>Next</strong>.",
   }
 };
 
