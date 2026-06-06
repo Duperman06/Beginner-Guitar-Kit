@@ -344,8 +344,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
       <div class="filter-group">
         <span class="filter-group-label" data-i18n="label_strings">Cordes (1 = Mi aigu · 6 = Mi grave)</span>
-        <div class="string-pills" id="m-string-pills"></div>
-        <span class="fret-hint" data-i18n="strings_hint">Toutes les cordes actives par défaut</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="string-pills" id="m-string-pills"></div>
+          <span onclick="mResetStrings()" title="Réactiver toutes les cordes" style="cursor:pointer;font-size:13px;color:var(--muted);border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;background:var(--bg);font-family:'DM Sans',sans-serif;font-weight:600;transition:all .15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">↺</span>
+        </div>
       </div>
     </div>
   </div>
@@ -423,8 +425,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
       <div class="filter-group">
         <span class="filter-group-label" data-i18n="label_strings">Cordes (1 = Mi aigu · 6 = Mi grave)</span>
-        <div class="string-pills" id="gm-string-pills"></div>
-        <span class="fret-hint" data-i18n="strings_hint">Toutes les cordes actives par défaut</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="string-pills" id="gm-string-pills"></div>
+          <span onclick="gmResetStrings()" title="Réactiver toutes les cordes" style="cursor:pointer;font-size:13px;color:var(--muted);border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;background:var(--bg);font-family:'DM Sans',sans-serif;font-weight:600;transition:all .15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">↺</span>
+        </div>
       </div>
 
     </div>
@@ -727,18 +731,18 @@ let mFretMin = 1, mFretMax = 22, mActiveStrings = new Set([0,1,2,3,4,5]);
 function mBuildNotes() {
   const div = document.getElementById('m-notes');
   const noteList = [
-    { label: 'C / B#',   chr: 0  },
+    { label: 'C',        chr: 0  },
     { label: 'C# / Db',  chr: 1  },
     { label: 'D',        chr: 2  },
     { label: 'D# / Eb',  chr: 3  },
-    { label: 'E / Fb',   chr: 4  },
-    { label: 'F / E#',   chr: 5  },
+    { label: 'E',        chr: 4  },
+    { label: 'F',        chr: 5  },
     { label: 'F# / Gb',  chr: 6  },
     { label: 'G',        chr: 7  },
     { label: 'G# / Ab',  chr: 8  },
     { label: 'A',        chr: 9  },
     { label: 'A# / Bb',  chr: 10 },
-    { label: 'B / Cb',   chr: 11 },
+    { label: 'B',        chr: 11 },
   ];
   noteList.forEach(({ label, chr }) => {
     const p = document.createElement('span');
@@ -769,16 +773,30 @@ function mBuildStringPills() {
     p.textContent = i + 1;
     p.title = i===0?'Mi aigu':i===5?'Mi grave':STRINGS[i];
     p.onclick = () => {
-      if (mActiveStrings.has(i)) {
-        if (mActiveStrings.size === 1) return;
-        mActiveStrings.delete(i); p.classList.remove('active');
+      const allActive = mActiveStrings.size === 6;
+      if (allActive) {
+        // 1er clic sur n'importe quelle corde : isoler uniquement celle-ci
+        mActiveStrings = new Set([i]);
+        div.querySelectorAll('.string-pill').forEach((el, idx) =>
+          el.classList.toggle('active', idx === i));
+      } else if (mActiveStrings.has(i)) {
+        // Corde déjà active et pas la seule : tout réactiver
+        mActiveStrings = new Set([0,1,2,3,4,5]);
+        div.querySelectorAll('.string-pill').forEach(el => el.classList.add('active'));
       } else {
+        // Ajouter cette corde à la sélection
         mActiveStrings.add(i); p.classList.add('active');
       }
       mApplyFilters();
     };
     div.appendChild(p);
   }
+}
+
+function mResetStrings() {
+  mActiveStrings = new Set([0,1,2,3,4,5]);
+  document.querySelectorAll('#m-string-pills .string-pill').forEach(p => p.classList.add('active'));
+  mApplyFilters();
 }
 
 function mUpdateRange() {
@@ -1049,13 +1067,21 @@ function gmBuildStringPills() {
   for (let i=0; i<6; i++) {
     const p = document.createElement('span');
     p.className = 'string-pill active';
-    p.textContent = i+1;   // 1 = Mi aigu, 6 = Mi grave
+    p.textContent = i+1;
     p.title = i===0?'Mi aigu':i===5?'Mi grave':STRINGS[i];
     p.onclick = () => {
-      if (gmActiveStrings.has(i)) {
-        if (gmActiveStrings.size===1) return; // garder au moins 1 corde
-        gmActiveStrings.delete(i); p.classList.remove('active');
+      const allActive = gmActiveStrings.size === 6;
+      if (allActive) {
+        // 1er clic : isoler uniquement cette corde
+        gmActiveStrings = new Set([i]);
+        div.querySelectorAll('.string-pill').forEach((el, idx) =>
+          el.classList.toggle('active', idx === i));
+      } else if (gmActiveStrings.has(i)) {
+        // Corde déjà active et pas la seule : tout réactiver
+        gmActiveStrings = new Set([0,1,2,3,4,5]);
+        div.querySelectorAll('.string-pill').forEach(el => el.classList.add('active'));
       } else {
+        // Ajouter cette corde
         gmActiveStrings.add(i); p.classList.add('active');
       }
       gmApplyFilters();
@@ -1065,6 +1091,12 @@ function gmBuildStringPills() {
 }
 
 /* -- Plage de frettes (champs texte) -- */
+function gmResetStrings() {
+  gmActiveStrings = new Set([0,1,2,3,4,5]);
+  document.querySelectorAll('#gm-string-pills .string-pill').forEach(p => p.classList.add('active'));
+  gmApplyFilters();
+}
+
 function gmUpdateRange() {
   let min = parseInt(document.getElementById('gm-fret-min').value) || 1;
   let max = parseInt(document.getElementById('gm-fret-max').value) || 22;
