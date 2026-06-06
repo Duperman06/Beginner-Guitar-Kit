@@ -547,7 +547,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
       <div class="rquiz-feedback" id="g-yn-feedback"></div>
       <div class="btn-row" style="margin-top:10px">
-        <button class="btn btn-rquiz" id="g-yn-next" onclick="gYnNext()" style="display:none" data-i18n="rq_next">Suivant →</button>
         <button class="btn btn-rquiz-stop" onclick="gYnStop()" data-i18n="rq_stop">⏹ Arrêter</button>
       </div>
     </div>
@@ -1063,6 +1062,15 @@ function gFullReset() {
   document.getElementById('g-quiz-info').textContent = '';
   document.getElementById('g-timer').textContent     = '';
   document.getElementById('g-result-panel').style.display = 'none';
+  // Réinitialiser le quiz Oui/Non
+  gYnBag = bagInit([...Array(12).keys()]);
+  gYnCurrent = 0; gYnScore = 0; gYnAnswered = false; gYnCurrentChr = null;
+  document.getElementById('g-yn-panel').style.display        = 'none';
+  document.getElementById('g-yn-setup').style.display        = 'block';
+  document.getElementById('g-yn-question').style.display     = 'none';
+  document.getElementById('g-yn-result').style.display       = 'none';
+  document.getElementById('g-yn-progress').textContent       = '';
+  document.getElementById('g-btn-yn').disabled               = false;
 }
 
 function gStartQuiz() {
@@ -1340,6 +1348,16 @@ function mFullReset() {
   document.getElementById('m-score-msg').textContent = '';
   document.getElementById('m-quiz-info').textContent = '';
   document.getElementById('m-timer').textContent     = T('timer_zero');
+  // Réinitialiser le quiz aléatoire
+  mRqFindBag = null; mRqPlaceBag = null;
+  mRqCurrent = 0; mRqScore = 0; mRqAnswered = false;
+  mRqClearHighlight();
+  document.getElementById('m-rquiz-panel').style.display      = 'none';
+  document.getElementById('m-rquiz-setup').style.display      = 'block';
+  document.getElementById('m-rquiz-question').style.display   = 'none';
+  document.getElementById('m-rquiz-result').style.display     = 'none';
+  document.getElementById('m-rquiz-progress').textContent     = '';
+  document.getElementById('m-btn-rquiz').disabled             = false;
 }
 
 function mResetSilent() { mWrongCells.clear(); mCells.forEach(c => { c.dataset.selected='false'; c.className='gcell'; c.querySelectorAll('.note-label,.note-ring').forEach(el=>el.remove()); }); mApplyFilters(); }
@@ -1642,6 +1660,16 @@ function gmFullReset() {
   document.getElementById('gm-score-msg').textContent = '';
   document.getElementById('gm-quiz-info').textContent = '';
   document.getElementById('gm-timer').textContent     = T('timer_zero');
+  // Réinitialiser le quiz aléatoire
+  gmRqBag = null;
+  gmRqCurrent = 0; gmRqScore = 0; gmRqAnswered = false;
+  gmRqClearHighlight();
+  document.getElementById('gm-rquiz-panel').style.display     = 'none';
+  document.getElementById('gm-rquiz-setup').style.display     = 'block';
+  document.getElementById('gm-rquiz-question').style.display  = 'none';
+  document.getElementById('gm-rquiz-result').style.display    = 'none';
+  document.getElementById('gm-rquiz-progress').textContent    = '';
+  document.getElementById('gm-btn-rquiz').disabled            = false;
 }
 
 function gmResetSilent() {
@@ -1810,7 +1838,6 @@ function gYnStart() {
 function gYnNextQuestion() {
   gYnAnswered = false;
   gYnCurrent++;
-  document.getElementById('g-yn-next').style.display    = 'none';
   document.getElementById('g-yn-feedback').textContent  = '';
   document.getElementById('g-yn-feedback').className    = 'rquiz-feedback';
   document.getElementById('g-yn-yes').disabled          = false;
@@ -1845,14 +1872,13 @@ function gYnAnswer(userSaysYes) {
     fb.className = 'rquiz-feedback bad';
   }
 
+  // Passe automatiquement à la question suivante après le feedback
   if (gYnCurrent < gYnTotal) {
-    document.getElementById('g-yn-next').style.display = 'inline-block';
+    setTimeout(() => gYnNextQuestion(), 900);
   } else {
-    setTimeout(() => gYnFinish(), 400);
+    setTimeout(() => gYnFinish(), 900);
   }
 }
-
-function gYnNext()    { gYnNextQuestion(); }
 
 function gYnFinish() {
   document.getElementById('g-yn-question').style.display = 'none';
