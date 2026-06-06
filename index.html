@@ -727,20 +727,18 @@ let mFretMin = 1, mFretMax = 22, mActiveStrings = new Set([0,1,2,3,4,5]);
 function mBuildNotes() {
   const div = document.getElementById('m-notes');
   const noteList = [
-    { label: 'C',        chr: 0  },
+    { label: 'C / B#',   chr: 0  },
     { label: 'C# / Db',  chr: 1  },
     { label: 'D',        chr: 2  },
     { label: 'D# / Eb',  chr: 3  },
-    { label: 'Eb',       chr: 3  },
-    { label: 'E',        chr: 4  },
-    { label: 'F',        chr: 5  },
+    { label: 'E / Fb',   chr: 4  },
+    { label: 'F / E#',   chr: 5  },
     { label: 'F# / Gb',  chr: 6  },
     { label: 'G',        chr: 7  },
     { label: 'G# / Ab',  chr: 8  },
     { label: 'A',        chr: 9  },
     { label: 'A# / Bb',  chr: 10 },
-    { label: 'Bb',       chr: 10 },
-    { label: 'B',        chr: 11 },
+    { label: 'B / Cb',   chr: 11 },
   ];
   noteList.forEach(({ label, chr }) => {
     const p = document.createElement('span');
