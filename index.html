@@ -1961,20 +1961,28 @@ function gmGetPentaPosition(mode, posIdx) {
   const data = PENTA_POSITIONS[mode];
   const baseRoot = data.rootNote;
   const currentRoot = gmCurrentRootChromatic;
-  const shift = currentRoot - baseRoot; // décalage en demi-tons
-
   const pos = data.positions[posIdx];
-  const sequence = [];
 
-  // Ordre de jeu : E grave (strIdx=5) → E aigu (strIdx=0), gauche→droite
+  // Calculer le shift en se basant sur la frette min de la position
+  // pour éviter que des frettes se retrouvent dans des octaves différentes
+  const allBaseFrets = Object.values(pos.frets).flat();
+  const baseMin = Math.min(...allBaseFrets);
+  const rawShift = currentRoot - baseRoot;
+  let adjustedShift = rawShift;
+
+  // Si la frette min transposée sort de 1-12, ajuster d'une octave
+  const transposedMin = baseMin + rawShift;
+  if (transposedMin < 1)  adjustedShift = rawShift + 12;
+  if (transposedMin > 12) adjustedShift = rawShift - 12;
+
+  // Transposer toutes les frettes avec le shift ajusté
+  const sequence = [];
   for (let si = 5; si >= 0; si--) {
-    const frets = pos.frets[si];
-    frets.forEach(f => {
-      let transposed = f + shift;
-      // Ajuster pour rester dans 1-22
-      while (transposed < 1)  transposed += 12;
-      while (transposed > 22) transposed -= 12;
-      sequence.push({ strIdx: si, fret: transposed });
+    pos.frets[si].forEach(f => {
+      let t = f + adjustedShift;
+      while (t < 1)  t += 12;
+      while (t > 22) t -= 12;
+      sequence.push({ strIdx: si, fret: t });
     });
   }
   return sequence;
