@@ -270,6 +270,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .gstring.walk-open-done  { background: #86efac !important; border: 2px solid #22c55e; cursor: default; }
 .gstring.walk-open-error { animation: walk-shake .3s ease; background: #fca5a5 !important; border: 2px solid #ef4444; }
 .gcell.walk-error   { background: #fca5a5 !important; outline: 2px solid #ef4444; animation: walk-shake .3s ease; }
+.gcell.walk-wrong   { background: #fca5a5 !important; outline: 2px solid #ef4444; }
+.pos-btn {
+  padding: 8px 16px; border-radius: 8px; border: 2px solid #eab308;
+  background: var(--bg); font-weight: 700; font-size: 13px;
+  cursor: pointer; font-family: 'DM Sans', sans-serif; color: #854d0e;
+  transition: all .15s; user-select: none;
+}
+.pos-btn:hover { background: #fef9c3; }
+.pos-btn.active { background: #eab308; color: #1a1a1a; }
+.gcell.walk-preview { background: #fef08a !important; outline: 2px solid #eab308; }
+
 .walk-panel {
   background: var(--surface);
   border: 2px solid #eab308;
@@ -456,6 +467,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <h1 class="home-title" data-i18n="home_title">Kit du Grand<br>Débutant</h1>
   <p class="home-sub" data-i18n="home_sub">Trois outils pour apprendre à votre rythme,<br>pas à pas, sans se perdre.</p>
   <div class="module-list">
+    <div class="module-card" onclick="goTo('intro')" style="border-color:#c4b5fd">
+      <div class="module-icon">📖</div>
+      <div class="module-info">
+        <div class="module-title" data-i18n="mod4_title">Introduction &amp; Guide</div>
+        <div class="module-desc" data-i18n="mod4_desc">Découvrez comment utiliser chaque module, les conseils de pratique et les nouveautés.</div>
+      </div>
+      <div class="module-arrow">→</div>
+    </div>
     <div class="module-card" onclick="goTo('gammes')">
       <div class="module-icon">🎼</div>
       <div class="module-info">
@@ -480,6 +499,22 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
       <div class="module-arrow">→</div>
     </div>
+  </div>
+</div>
+
+<!-- ══ INTRODUCTION ══ -->
+<div id="page-intro" class="page-inner">
+  <button class="back-btn" onclick="goTo('home')" data-i18n="back">← Accueil</button>
+  <h2 class="page-title" data-i18n="mod4_title">Introduction &amp; Guide</h2>
+
+  <div class="panel">
+    <div class="panel-label" data-i18n="intro_guide_label">📖 Guide d'utilisation</div>
+    <div data-i18n="intro_guide_content" style="margin-top:16px"></div>
+  </div>
+
+  <div class="panel" style="margin-top:20px">
+    <div class="panel-label" data-i18n="intro_changelog_label">🆕 Nouveautés &amp; mises à jour</div>
+    <div data-i18n="intro_changelog_content" style="margin-top:14px;font-size:13px;color:var(--muted);line-height:1.8"></div>
   </div>
 </div>
 
@@ -825,7 +860,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     </div>
     <div id="gm-walk-setup">
       <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px" id="gm-walk-setup-desc"></p>
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+      <!-- Sélecteur de position pentatonique (affiché uniquement pour les pentas) -->
+      <div id="gm-walk-pos-section" style="display:none;margin-bottom:14px">
+        <div class="panel-label" style="margin-bottom:8px">Position</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap" id="gm-walk-pos-btns"></div>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px">La position s'affiche en jaune sur le manche — mémorisez-la, elle disparaît au démarrage.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px" id="gm-walk-reps-row">
         <span style="font-size:13px;font-weight:600;color:var(--muted)" data-i18n="walk_repeat_label">Répétitions :</span>
         <input class="rquiz-count-input" type="number" id="gm-walk-reps" min="1" value="1" onfocus="this.select()">
         <span style="font-size:12px;color:var(--muted)" id="gm-walk-max-hint"></span>
@@ -894,10 +935,12 @@ function goTo(id) {
     if (document.getElementById('page-gammes-manche').classList.contains('active')) gmFullReset();
   }
   document.getElementById('page-home').style.display = 'none';
-  ['gammes','manche','gammes-manche'].forEach(p =>
+  ['gammes','manche','gammes-manche','intro'].forEach(p =>
     document.getElementById('page-' + p).classList.remove('active'));
   if (id === 'home') document.getElementById('page-home').style.display = 'block';
   else               document.getElementById('page-' + id).classList.add('active');
+  // Remplir le contenu i18n à chaque navigation (notamment la page intro)
+  if (id === 'intro') applyLang();
 }
 
 /* ══════════════════════════
@@ -1722,7 +1765,12 @@ function gmFullReset() {
 
 function gmResetSilent() {
   gmWrongCells.clear();
-  gmCells.forEach(c => { c.dataset.selected='false'; c.className='gcell'; c.querySelectorAll('.note-label,.note-ring').forEach(el=>el.remove()); });
+  gmCells.forEach(c => {
+    c.dataset.selected='false'; c.className='gcell';
+    c.style.pointerEvents = ''; // restaurer après walk-done
+    c.onclick = () => { if (gmWalkMode) return; if (!gmQuizMode) gmToggle(c); else gmQuizClick(c); };
+    c.querySelectorAll('.note-label,.note-ring').forEach(el=>el.remove());
+  });
   gmApplyFilters();
 }
 
@@ -1844,6 +1892,101 @@ function bagPick(bagState) {
   return bagState.deck.shift();
 }
 
+
+/* ══════════════════════════════════════════
+   DONNÉES PENTATONIQUES
+   Positions stockées comme frettes absolues pour Am (minor) et G (major)
+   puis transposées à la tonique sélectionnée
+   strIdx : 5=E grave, 4=A, 3=D, 2=G, 1=B, 0=E aigu
+══════════════════════════════════════════ */
+const PENTA_POSITIONS = {
+  penta_minor: {
+    // Exemple : Am
+    rootFret: { str4: 5, str5: 5 }, // A sur corde A frette 5, E grave frette 5
+    rootNote: 9, // A = index 9 dans NOTES_SHARP
+    positions: [
+      { // Position 1 (5-8)
+        label: 'Position 1',
+        frets: { 5:[5,8], 4:[5,7], 3:[5,7], 2:[5,7], 1:[5,8], 0:[5,8] }
+      },
+      { // Position 2 (7-10)
+        label: 'Position 2',
+        frets: { 5:[8,10], 4:[7,10], 3:[7,10], 2:[7,9], 1:[8,10], 0:[8,10] }
+      },
+      { // Position 3 (9-13)
+        label: 'Position 3',
+        frets: { 5:[10,12], 4:[10,12], 3:[10,12], 2:[9,12], 1:[10,13], 0:[10,12] }
+      },
+      { // Position 4 (12-15)
+        label: 'Position 4',
+        frets: { 5:[12,15], 4:[12,15], 3:[12,14], 2:[12,14], 1:[13,15], 0:[12,15] }
+      },
+      { // Position 5 (2-5)
+        label: 'Position 5',
+        frets: { 5:[3,5], 4:[3,5], 3:[2,5], 2:[2,5], 1:[3,5], 0:[3,5] }
+      }
+    ]
+  },
+  penta_major: {
+    // Exemple : G
+    rootNote: 7, // G = index 7 dans NOTES_SHARP
+    positions: [
+      { // Position 1 (2-5)
+        label: 'Position 1',
+        frets: { 5:[3,5], 4:[2,5], 3:[2,5], 2:[2,4], 1:[3,5], 0:[3,5] }
+      },
+      { // Position 2 (4-8)
+        label: 'Position 2',
+        frets: { 5:[5,7], 4:[5,7], 3:[5,7], 2:[4,7], 1:[5,8], 0:[5,7] }
+      },
+      { // Position 3 (7-10)
+        label: 'Position 3',
+        frets: { 5:[7,10], 4:[7,10], 3:[7,9], 2:[7,9], 1:[8,10], 0:[7,10] }
+      },
+      { // Position 4 (9-12)
+        label: 'Position 4',
+        frets: { 5:[10,12], 4:[10,12], 3:[9,12], 2:[9,12], 1:[10,12], 0:[10,12] }
+      },
+      { // Position 5 (12-15)
+        label: 'Position 5',
+        frets: { 5:[12,15], 4:[12,14], 3:[12,14], 2:[12,14], 1:[12,15], 0:[12,15] }
+      }
+    ]
+  }
+};
+
+// Transpose une position vers la tonique courante
+// Retourne un tableau de {strIdx, fret} dans l'ordre de jeu (E grave→E aigu, gauche→droite)
+function gmGetPentaPosition(mode, posIdx) {
+  const data = PENTA_POSITIONS[mode];
+  const baseRoot = data.rootNote;
+  const currentRoot = gmCurrentRootChromatic;
+  const shift = currentRoot - baseRoot; // décalage en demi-tons
+
+  const pos = data.positions[posIdx];
+  const sequence = [];
+
+  // Ordre de jeu : E grave (strIdx=5) → E aigu (strIdx=0), gauche→droite
+  for (let si = 5; si >= 0; si--) {
+    const frets = pos.frets[si];
+    frets.forEach(f => {
+      let transposed = f + shift;
+      // Ajuster pour rester dans 1-22
+      while (transposed < 1)  transposed += 12;
+      while (transposed > 22) transposed -= 12;
+      sequence.push({ strIdx: si, fret: transposed });
+    });
+  }
+  return sequence;
+}
+
+// Retourne les cellules du manche correspondant à une séquence de position
+function gmGetPentaCells(sequence) {
+  return sequence.map(({ strIdx, fret }) =>
+    gmCells.find(c => parseInt(c.dataset.strIdx) === strIdx && parseInt(c.dataset.fret) === fret)
+  ).filter(Boolean);
+}
+
 /* ══════════════════════════════════════════
    MODULE 3 — PARCOURIR LA GAMME
 ══════════════════════════════════════════ */
@@ -1855,39 +1998,56 @@ let gmWalkRep       = 1;    // répétition courante
 let gmWalkReps      = 1;    // nombre total de répétitions
 let gmWalkCells     = [];   // cellules actives de la zone
 
+let gmWalkPentaMode   = false;
+let gmWalkPentaPosIdx = 0;
+let gmWalkPentaSeq    = [];
+let gmWalkWrongCells  = new Set(); // cases sur lesquelles l'utilisateur s'est trompé
 function gmWalkOpen() {
+  const isPenta = gmCurrentMode === 'penta_major' || gmCurrentMode === 'penta_minor';
+  gmWalkPentaMode = isPenta;
+
   const targetChr = getScaleChromatic(gmCurrentRootChromatic, gmCurrentMode);
   const activeCells = gmGetActiveCells();
   gmWalkCells = activeCells.filter(c => targetChr.includes(parseInt(c.dataset.chromatic)));
-  if (!gmWalkCells.length) { alert(T('alert_no_gm')); return; }
 
-  gmWalkScaleBase = targetChr; // ex: [0,2,4,5,7,9,11] pour majeure
+  gmWalkScaleBase = targetChr;
 
-  // Calcul du max de répétitions : nombre d'occurrences de la fondamentale dans la zone
-  const rootChr   = gmCurrentRootChromatic;
-  let rootCount = gmWalkCells.filter(c => parseInt(c.dataset.chromatic) === rootChr).length;
-  if (gmFretMin === 1) {
-    STRINGS.forEach((s, si) => {
-      if (gmActiveStrings.has(si) && NOTES_SHARP.indexOf(s) === rootChr) rootCount++;
-    });
+  const posSection = document.getElementById('gm-walk-pos-section');
+  const repsRow    = document.getElementById('gm-walk-reps-row');
+
+  if (isPenta) {
+    posSection.style.display = 'block';
+    repsRow.style.display    = 'none';
+    gmWalkPentaPosIdx = 0;
+    gmBuildPentaPosBtns();
+    gmWalkPreviewPosition(0);
+    document.getElementById('gm-walk-setup-desc').textContent =
+      'Choisissez une position ou travaillez toutes les positions sur des cordes choisies.';
+  } else {
+    if (!gmWalkCells.length) { alert(T('alert_no_gm')); return; }
+    posSection.style.display = 'none';
+    repsRow.style.display    = 'flex';
+    gmWalkClearPreview();
+
+    const rootChr = gmCurrentRootChromatic;
+    let rootCount = gmWalkCells.filter(c => parseInt(c.dataset.chromatic) === rootChr).length;
+    if (gmFretMin === 1) {
+      STRINGS.forEach((s, si) => {
+        if (gmActiveStrings.has(si) && NOTES_SHARP.indexOf(s) === rootChr) rootCount++;
+      });
+    }
+    const maxReps = Math.max(1, rootCount - 1);
+    document.getElementById('gm-walk-reps').max   = maxReps;
+    document.getElementById('gm-walk-reps').value = 1;
+    document.getElementById('gm-walk-max-hint').textContent = T('walk_max_hint', maxReps);
+    const scaleSize = gmWalkScaleBase.length;
+    document.getElementById('gm-walk-setup-desc').textContent = T('walk_setup_desc', scaleSize, 1);
+    const repsInput = document.getElementById('gm-walk-reps');
+    repsInput.oninput = () => {
+      let v = Math.max(1, Math.min(maxReps, parseInt(repsInput.value) || 1));
+      document.getElementById('gm-walk-setup-desc').textContent = T('walk_setup_desc', scaleSize, v);
+    };
   }
-  const maxReps = Math.max(1, rootCount - 1);
-
-  // Affichage setup
-  document.getElementById('gm-walk-reps').max   = maxReps;
-  document.getElementById('gm-walk-reps').value = 1;
-  document.getElementById('gm-walk-max-hint').textContent = T('walk_max_hint', maxReps);
-
-  const scaleSize = gmWalkScaleBase.length;
-  document.getElementById('gm-walk-setup-desc').textContent =
-    T('walk_setup_desc', scaleSize, 1);
-
-  // Mettre à jour la desc quand l'input change
-  const repsInput = document.getElementById('gm-walk-reps');
-  repsInput.oninput = () => {
-    let v = Math.max(1, Math.min(maxReps, parseInt(repsInput.value) || 1));
-    document.getElementById('gm-walk-setup-desc').textContent = T('walk_setup_desc', scaleSize, v);
-  };
 
   document.getElementById('gm-walk-panel').style.display   = 'block';
   document.getElementById('gm-walk-setup').style.display    = 'block';
@@ -1895,51 +2055,100 @@ function gmWalkOpen() {
   document.getElementById('gm-walk-panel').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
+function gmBuildPentaPosBtns() {
+  const div = document.getElementById('gm-walk-pos-btns');
+  div.innerHTML = '';
+  const positions = PENTA_POSITIONS[gmCurrentMode].positions;
+  positions.forEach((pos, i) => {
+    const btn = document.createElement('span');
+    btn.className = 'pos-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = pos.label;
+    btn.onclick = () => {
+      div.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      gmWalkPentaPosIdx = i;
+      gmWalkPreviewPosition(i);
+    };
+    div.appendChild(btn);
+  });
+}
+
+function gmWalkPreviewPosition(posIdx) {
+  gmWalkClearPreview();
+  const seq = gmGetPentaPosition(gmCurrentMode, posIdx);
+  seq.forEach(({ strIdx, fret }) => {
+    const c = gmCells.find(c => parseInt(c.dataset.strIdx) === strIdx && parseInt(c.dataset.fret) === fret);
+    if (c) c.classList.add('walk-preview');
+  });
+}
+
+function gmWalkClearPreview() {
+  gmCells.forEach(c => c.classList.remove('walk-preview'));
+}
+
 function gmWalkClose() {
   document.getElementById('gm-walk-panel').style.display = 'none';
 }
 
 function gmWalkStart() {
-  const rootChr   = gmCurrentRootChromatic;
-  let rootCount = gmWalkCells.filter(c => parseInt(c.dataset.chromatic) === rootChr).length;
-  if (gmFretMin === 1) {
-    STRINGS.forEach((s, si) => {
-      if (gmActiveStrings.has(si) && NOTES_SHARP.indexOf(s) === rootChr) rootCount++;
-    });
-  }
-  const maxReps = Math.max(1, rootCount - 1);
-  gmWalkReps = Math.max(1, Math.min(maxReps, parseInt(document.getElementById('gm-walk-reps').value) || 1));
   gmWalkRep  = 1;
   gmWalkStep = 0;
   gmWalkMode = true;
+  gmWalkWrongCells = new Set();
+  gmWalkClearPreview();
 
-  // Construire la séquence complète : pour chaque répétition, les 7 (ou 5) notes + octave (fondamentale)
-  // La fondamentale de clôture d'un passage = degré 1 du suivant
-  // Ex 2 passages Do maj : Do Ré Mi Fa Sol La Si Do Ré Mi Fa Sol La Si Do
-  gmWalkFullSeq = [...gmWalkScaleBase];
-  for (let r = 1; r < gmWalkReps; r++) {
-    gmWalkFullSeq.push(gmCurrentRootChromatic);       // do partagé
-    gmWalkScaleBase.slice(1).forEach(chr => gmWalkFullSeq.push(chr)); // ré→si
+  if (gmWalkPentaMode) {
+    gmWalkPentaSeq = gmGetPentaPosition(gmCurrentMode, gmWalkPentaPosIdx)
+      .filter(({strIdx, fret}) =>
+        gmCells.some(c => parseInt(c.dataset.strIdx)===strIdx && parseInt(c.dataset.fret)===fret)
+      );
+    gmWalkReps = 1;
+  } else {
+    // Mode gamme normale
+    const rootChr2 = gmCurrentRootChromatic;
+    let rootCount2 = gmWalkCells.filter(c => parseInt(c.dataset.chromatic) === rootChr2).length;
+    if (gmFretMin === 1) {
+      STRINGS.forEach((s, si) => {
+        if (gmActiveStrings.has(si) && NOTES_SHARP.indexOf(s) === rootChr2) rootCount2++;
+      });
+    }
+    const maxReps2 = Math.max(1, rootCount2 - 1);
+    gmWalkReps = Math.max(1, Math.min(maxReps2, parseInt(document.getElementById('gm-walk-reps').value) || 1));
+    gmWalkFullSeq = [...gmWalkScaleBase];
+    for (let r = 1; r < gmWalkReps; r++) {
+      gmWalkFullSeq.push(gmCurrentRootChromatic);
+      gmWalkScaleBase.slice(1).forEach(chr => gmWalkFullSeq.push(chr));
+    }
+    gmWalkFullSeq.push(gmCurrentRootChromatic);
   }
-  gmWalkFullSeq.push(gmCurrentRootChromatic);         // octave finale
 
   ['gm-btn-corriger','gm-btn-quiz','gm-btn-reset','gm-btn-rquiz','gm-btn-walk'].forEach(id =>
     document.getElementById(id).disabled = true);
 
   gmResetSilent();
+
+
   document.getElementById('gm-walk-setup').style.display    = 'none';
   document.getElementById('gm-walk-exercise').style.display = 'block';
   document.getElementById('gm-walk-feedback').textContent   = '';
   document.getElementById('gm-walk-feedback').className     = 'walk-feedback';
-  gmWalkUpdateProgress();
 
-  // Attacher le handler walk sur toutes les cellules actives de la zone
-  // (pas seulement celles de la gamme) pour intercepter les erreurs
-  const gmAllActiveCells = gmGetActiveCells();
-  gmAllActiveCells.forEach(c => {
-    c._walkHandler = () => gmWalkClick(c);
-    c.addEventListener('click', c._walkHandler);
-  });
+  if (gmWalkPentaMode) {
+    gmWalkUpdateProgressPenta();
+    // Attacher les handlers sur toutes les cellules du manche (pour capter les erreurs aussi)
+    gmCells.forEach(c => {
+      if (c.classList.contains('out-of-range')) return;
+      c._walkHandler = () => gmWalkClick(c);
+      c.addEventListener('click', c._walkHandler);
+    });
+  } else {
+    gmWalkUpdateProgress();
+    const gmAllActiveCells = gmGetActiveCells();
+    gmAllActiveCells.forEach(c => {
+      c._walkHandler = () => gmWalkClick(c);
+      c.addEventListener('click', c._walkHandler);
+    });
+  }
 
   // Cordes à vide cliquables si frette min = 1
   if (gmFretMin === 1) {
@@ -1997,6 +2206,13 @@ function gmWalkClickOpen(lbl, chr) {
   }
 }
 
+function gmWalkUpdateProgressPenta() {
+  const total = gmWalkPentaSeq.length;
+  document.getElementById('gm-walk-progress').textContent = (gmWalkStep + 1) + ' / ' + total;
+  document.getElementById('gm-walk-desc').textContent =
+    'Jouez dans l\'ordre : Mi grave → Mi aigu, gauche → droite sur chaque corde.';
+}
+
 function gmWalkUpdateProgress() {
   const scLen     = gmWalkScaleBase.length;
   const stepInRep = (gmWalkStep % scLen) + 1;
@@ -2017,7 +2233,39 @@ function gmWalkShowNoteRing(c, noteName, isCorrect) {
 
 function gmWalkClick(c) {
   if (!gmWalkMode) return;
-  const chr        = parseInt(c.dataset.chromatic);
+  const chr = parseInt(c.dataset.chromatic);
+
+  if (gmWalkPentaMode) {
+    const targetItem = gmWalkPentaSeq[gmWalkStep];
+    if (!targetItem) return;
+    const isCorrect = parseInt(c.dataset.strIdx) === targetItem.strIdx
+                   && parseInt(c.dataset.fret)   === targetItem.fret;
+    const targetCell = gmCells.find(x =>
+      parseInt(x.dataset.strIdx)===targetItem.strIdx && parseInt(x.dataset.fret)===targetItem.fret);
+    const targetChrP  = targetCell ? parseInt(targetCell.dataset.chromatic) : -1;
+    const noteList    = getNoteList(gmAlt);
+    const clickedName = noteList.find(e=>e.chromatic===chr)?.display || NOTES_SHARP[chr];
+    const targetName  = noteList.find(e=>e.chromatic===targetChrP)?.display || NOTES_SHARP[targetChrP] || '?';
+    const fb = document.getElementById('gm-walk-feedback');
+    gmWalkShowNoteRing(c, clickedName, isCorrect);
+    if (isCorrect) {
+      if (c._walkHandler) { c.removeEventListener('click', c._walkHandler); delete c._walkHandler; }
+      c.onclick = null; c.style.pointerEvents = 'none';
+      c.classList.add('walk-done');
+      fb.textContent = ''; fb.className = 'walk-feedback';
+      gmWalkStep++;
+      if (gmWalkStep >= gmWalkPentaSeq.length) { gmWalkEnd(); }
+      else { gmWalkUpdateProgressPenta(); }
+    } else {
+      gmWalkWrongCells.add(c);
+      c.classList.add('walk-error');
+      setTimeout(() => c.classList.remove('walk-error'), 600);
+      fb.textContent = T('walk_error', targetName);
+      fb.className   = 'walk-feedback bad';
+    }
+    return;
+  }
+
   const targetChr  = gmWalkFullSeq[gmWalkStep];
   const fb         = document.getElementById('gm-walk-feedback');
   const noteList   = getNoteList(gmAlt);
@@ -2050,6 +2298,7 @@ function gmWalkClick(c) {
     else { gmWalkUpdateProgress(); }
   } else {
     // Mauvaise note — flash rouge puis disparaît
+    gmWalkWrongCells.add(c);
     c.classList.add('walk-error');
     setTimeout(() => c.classList.remove('walk-error'), 700);
     fb.textContent = T('walk_error', targetName);
@@ -2058,13 +2307,35 @@ function gmWalkClick(c) {
 }
 
 function gmWalkEnd() {
-  gmWalkDetachHandlers();
   gmWalkMode = false;
   const fb = document.getElementById('gm-walk-feedback');
   fb.textContent = T('walk_done');
   fb.className   = 'walk-feedback ok';
   document.getElementById('gm-walk-progress').textContent = '✓';
   document.getElementById('gm-walk-desc').textContent    = '';
+  // Afficher les notes sur les cases jouées (vert) + erreurs (rouge)
+  gmCells.forEach(c => {
+    if (!c.classList.contains('walk-done')) return;
+    const chr  = parseInt(c.dataset.chromatic);
+    const name = getNoteList(gmAlt).find(e => e.chromatic === chr)?.display || NOTES_SHARP[chr];
+    if (!c.querySelector('.note-label')) {
+      const lbl = document.createElement('span');
+      lbl.className = 'note-label'; lbl.textContent = name; c.appendChild(lbl);
+    }
+  });
+  // Cases erronées : rouge permanent avec leur note
+  gmWalkWrongCells.forEach(c => {
+    if (c.classList.contains('walk-done')) return; // déjà validée après erreur, ne pas recolorer
+    const chr  = parseInt(c.dataset.chromatic);
+    const name = getNoteList(gmAlt).find(e => e.chromatic === chr)?.display || NOTES_SHARP[chr];
+    c.classList.add('walk-wrong');
+    if (!c.querySelector('.note-label')) {
+      const lbl = document.createElement('span');
+      lbl.className = 'note-label note-label-wrong'; lbl.textContent = name; c.appendChild(lbl);
+    }
+  });
+  // Détacher les handlers APRÈS avoir affiché les notes
+  gmWalkDetachHandlers();
   ['gm-btn-corriger','gm-btn-quiz','gm-btn-reset','gm-btn-rquiz','gm-btn-walk'].forEach(id =>
     document.getElementById(id).disabled = false);
 }
@@ -2072,7 +2343,23 @@ function gmWalkEnd() {
 function gmWalkStop() {
   gmWalkDetachHandlers();
   gmWalkMode = false;
-  gmResetSilent();
+  gmWalkClearPreview();
+  // Afficher les notes jouées (vert) et les cases non jouées (orange) selon la séquence
+  const _seq = gmWalkPentaMode ? gmWalkPentaSeq : gmWalkCells.map(c => ({
+    strIdx: parseInt(c.dataset.strIdx), fret: parseInt(c.dataset.fret)
+  }));
+  _seq.forEach(({strIdx, fret}) => {
+    const c = gmCells.find(x => parseInt(x.dataset.strIdx)===strIdx && parseInt(x.dataset.fret)===fret);
+    if (!c) return;
+    const chr  = parseInt(c.dataset.chromatic);
+    const name = getNoteList(gmAlt).find(e => e.chromatic === chr)?.display || NOTES_SHARP[chr];
+    if (!c.querySelector('.note-label')) {
+      const lbl = document.createElement('span');
+      lbl.className = 'note-label'; lbl.textContent = name; c.appendChild(lbl);
+    }
+    if (!c.classList.contains('walk-done')) c.classList.add('missed');
+  });
+  gmResetSilent(); // efface tout proprement (y compris les labels et couleurs)
   document.getElementById('gm-walk-panel').style.display   = 'none';
   document.getElementById('gm-walk-setup').style.display    = 'block';
   document.getElementById('gm-walk-exercise').style.display = 'none';
@@ -2081,11 +2368,14 @@ function gmWalkStop() {
 }
 
 function gmWalkDetachHandlers() {
-  // Retirer les handlers walk sur toutes les cellules actives (pas seulement celles de la gamme)
-  gmGetActiveCells().forEach(c => {
+  // Retirer les handlers walk sur toutes les cellules (penta ou active)
+  gmCells.forEach(c => {
     if (c._walkHandler) { c.removeEventListener('click', c._walkHandler); delete c._walkHandler; }
-    c.onclick = () => { if (gmWalkMode) return; if (!gmQuizMode) gmToggle(c); else gmQuizClick(c); };
-    c.style.pointerEvents = '';
+    // Ne pas écraser pointer-events des cases walk-done
+    if (!c.classList.contains('walk-done')) {
+      c.onclick = () => { if (gmWalkMode) return; if (!gmQuizMode) gmToggle(c); else gmQuizClick(c); };
+      c.style.pointerEvents = '';
+    }
   });
   document.querySelectorAll('#gm-board .gstring').forEach(lbl => {
     if (lbl._walkOpenHandler) {
@@ -2703,6 +2993,67 @@ const LANG = {
     walk_error:      (n) => '✗ Mauvaise note — attendu : ' + n,
     gm_rquiz_hint:   'Une case de la gamme s\'allume, devinez la note parmi les 12 proposées.',
     gm_walk_hint:    'Jouez la gamme dans l\'ordre sur le manche, de la fondamentale à l\'octave, sans indice.',
+    intro_guide_label:       '📖 Guide d\'utilisation',
+    intro_changelog_label:   '🆕 Nouveautés & mises à jour',
+    intro_guide_content:     `<div style="margin-top:16px">
+<h3 style="font-size:16px;color:var(--accent);margin-bottom:8px;font-weight:700">🎼 Travailler ses gammes</h3>
+<p style="font-size:13px;color:var(--muted);line-height:1.8">Ce module permet de travailler la reconnaissance des notes d'une gamme parmi les 12 notes chromatiques.</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px"><strong>Paramètres disponibles :</strong></p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 8px 16px">
+<li><strong>Altérations</strong> — choisissez entre l'écriture en dièses (C#, F#…) ou en bémols (Db, Gb…).</li>
+<li><strong>Modes</strong> — Majeure, Mineure naturelle, Pentatonique majeure, Pentatonique mineure.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px"><strong>Modes d'utilisation :</strong></p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 0 16px">
+<li><strong>Mode libre</strong> (Par défaut) — cochez les notes que vous pensez appartenir à la gamme sur la roue chromatique, puis cliquez sur <strong>Corriger</strong> pour voir vos erreurs (vert = correct, orange = manqué, rouge = fausse note).</li>
+<li><strong>Mode Quiz</strong> — l'outil vous chronomètre pendant que vous retrouvez toutes les notes de la gamme. Chaque clic est évalué en temps réel : une bonne note est validée immédiatement, une mauvaise est signalée. Le score et le temps s'affichent à la fin.</li>
+<li><strong>Quiz Oui / Non</strong> — une note s'affiche aléatoirement, répondez <strong>Oui</strong> si elle fait partie de la gamme, <strong>Non</strong> sinon. Feedback immédiat à chaque réponse. Idéal pour un entraînement rapide au quotidien.</li>
+</ul>
+</div>
+
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+<h3 style="font-size:16px;color:var(--accent);margin-bottom:8px;font-weight:700">🎸 Apprendre le manche de guitare</h3>
+<p style="font-size:13px;color:var(--muted);line-height:1.8">Ce module permet d'apprendre les notes sur le manche <strong>note par note</strong>. Pour travailler une gamme complète sur le manche, référez-vous au module <strong>Gamme sur le manche de guitare</strong>.</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px">L'outil permet de sélectionner une ou plusieurs notes cibles (naturelles et altérées) et de les retrouver sur le manche. Toutes les notes chromatiques sont disponibles, y compris les altérations (C#/Db, D#/Eb, etc.).</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px"><strong>Zone de travail :</strong> un panneau permet de cibler une zone précise du manche.</p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 8px 16px">
+<li><strong>Frettes</strong> — définissez une plage de frettes (ex: frettes 1 à 5) en modifiant les champs De / À.</li>
+<li><strong>Cordes</strong> — par défaut toutes les cordes sont actives. Un premier clic sur une corde l'isole. Les clics suivants ajoutent des cordes à la sélection. Cliquer sur une corde déjà active la retire. Le bouton ↺ réactive toutes les cordes.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:4px">⚠️ <strong>Rappel important</strong> — pour travailler sur une zone isolée, commencez toujours par configurer la zone de travail <em>avant</em> de démarrer le quiz.</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px"><strong>Modes d'utilisation :</strong></p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 0 16px">
+<li><strong>Mode libre</strong> (Par défaut) — cliquez les cases sur le manche à votre rythme, puis <strong>Corriger</strong> pour voir le résultat.</li>
+<li><strong>Mode Quiz</strong> — testez vos connaissances sur les notes sélectionnées, chronométré. Correction en temps réel, score final et correction complète affichée à la fin de l'exercice.</li>
+<li><strong>Quiz aléatoire — Trouver la note</strong> — une case du manche s'allume, identifiez la note parmi les 12 proposées.</li>
+<li><strong>Quiz aléatoire — Placer la note</strong> — un nom de note s'affiche, trouvez et sélectionnez toutes ses occurrences sur la zone, puis validez. Un indice sur le nombre de cases à trouver est disponible si besoin.</li>
+</ul>
+</div>
+
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+<h3 style="font-size:16px;color:var(--accent);margin-bottom:8px;font-weight:700">🗺️ Gamme sur le manche de guitare</h3>
+<p style="font-size:13px;color:var(--muted);line-height:1.8"><strong>Paramètres disponibles :</strong></p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 8px 16px">
+<li><strong>Altérations</strong> — dièses ou bémols, selon votre préférence.</li>
+<li><strong>Tonique</strong> — toutes les toniques sont disponibles (C à B, couvrant les 12 demi-tons).</li>
+<li><strong>Mode</strong> — Majeure, Mineure naturelle, Pentatonique majeure, Pentatonique mineure.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted);line-height:1.8"><strong>Zone de travail :</strong> même fonctionnement que dans "Apprendre le manche" — isolez des frettes, des cordes, ou les deux. Configurez la zone avant de démarrer tout exercice.</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px"><strong>Modes d'utilisation :</strong></p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 8px 16px">
+<li><strong>Mode libre</strong> (Par défaut) — placez les notes de la gamme sur la zone choisie à votre rythme, puis cliquez <strong>Corriger</strong> pour voir la correction.</li>
+<li><strong>Mode Quiz</strong> — chaque case cliquée est évaluée en temps réel. Idéal pour travailler sa gamme sur une zone du manche sans forcément respecter l'ordre des degrés, mais en restant dans la gamme. Correction finale affichée à la fin de l'exercice.</li>
+<li><strong>Quiz aléatoire</strong> — une case de la gamme s'allume, devinez la note parmi les 12 proposées. Correction immédiate à chaque question. Note : l'affichage du résultat global n'est pas encore disponible mais pourra être ajouté ultérieurement.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px"><strong style="font-size:14px">🎵 Parcourir la gamme</strong> — la fonction phare de ce module. Elle permet de dérouler la gamme dans l'ordre de ses degrés (ex: en Do majeur : C – D – E – F – G – A – B – C). Cliquez les notes une par une sur le manche dans le bon ordre, sans indice visuel.</p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 8px 16px">
+<li><strong>Répétitions</strong> — choisissez combien de fois dérouler la gamme. Si 1 répétition : l'exercice s'arrête à l'octave. Si 2 répétitions : la note de clôture du 1er passage sert de point de départ du 2e (ex: …B – C – D – E – F – G – A – B – C) et l'exercice s'arrête une fois la gamme jouée deux fois. Les cases déjà jouées ne sont pas re-sélectionnables.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:4px"><strong style="font-size:14px">🎸 Positions pentatoniques</strong> — lorsque le mode Pentatonique est sélectionné dans le panneau mode, "Parcourir la gamme" propose de travailler une position spécifique parmi les 5 positions CAGED. La position s'affiche en jaune avant le démarrage pour s'assurer que l'utilisateur puisse bien travailler la position voulue.</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px">⚠️ Les positions pentatoniques ont été paramétrées sur la gamme de <strong>Sol majeur (G) et La mineur (Am)</strong>. Les autres toniques sont obtenues par transposition et peuvent contenir des imprécisions. Il est donc recommandé de s'entraîner principalement sur <strong>G majeur et Am</strong>.</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px">💡 <strong>Conseil</strong> — si vous souhaitez travailler la pentatonique sur certaines cordes uniquement, le <strong>Quiz</strong> est nettement plus approprié que "Parcourir la gamme" : sur deux cordes, l'important est de rester dans la gamme, pas de jouer les notes dans un ordre précis.</p>
+</div>`,
+    intro_changelog_content: `<div style="margin-bottom:14px"><strong>Version 1.3</strong> <span style="font-size:11px;background:#c4b5fd;color:#4c1d95;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700">Dernière version</span><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎵 <strong>Parcourir la gamme</strong> — exercice ordonné avec affichage des notes et erreurs</li><li>🎸 <strong>5 positions pentatoniques</strong> — positions CAGED avec prévisualisation jaune</li><li>🎲 <strong>Quiz aléatoire</strong> — dans "Apprendre le manche" et "Gamme sur le manche"</li><li>🔄 Tirage sans remise — toutes les notes vues avant répétition</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.2</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎡 <strong>Roue chromatique</strong> interactive dans "Travailler ses gammes"</li><li>🎲 <strong>Quiz Oui/Non</strong> dans "Travailler ses gammes"</li><li>🌐 Interface bilingue FR/EN</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border)"><strong>Version 1.0</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎼 Module "Travailler ses gammes" avec quiz chronométré</li><li>🎸 Module "Apprendre le manche" avec zone de travail</li><li>🗺️ Module "Gamme sur le manche" avec modes majeur, mineur et pentatonique</li></ul></div>`,
     walk_repeat_label: 'Répétitions :',
     walk_max_hint:   (n) => 'max ' + n + ' sur cette zone',
     walk_setup_desc: (s, reps) => 'Parcourez la gamme (' + s + ' notes + octave) ' + reps + ' fois de suite, dans l\'ordre, sans indice.',
@@ -2797,6 +3148,59 @@ const LANG = {
     walk_error:      (n) => '✗ Wrong note — expected: ' + n,
     gm_rquiz_hint:   'A scale cell lights up — guess the note among the 12 shown.',
     gm_walk_hint:    'Play the scale in order on the fretboard, from the root to the octave, without hints.',
+    intro_guide_label:       '📖 Usage guide',
+    intro_changelog_label:   '🆕 Updates & changelog',
+    intro_guide_content:     `<div style="margin-top:16px">
+<h3 style="font-size:16px;color:var(--accent);margin-bottom:8px;font-weight:700">🎼 Working on scales</h3>
+<p style="font-size:13px;color:var(--muted);line-height:1.8">This module helps you recognise scale notes among the 12 chromatic notes.</p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:8px 0 8px 16px">
+<li><strong>Accidentals</strong> — choose between sharps (C#, F#…) or flats (Db, Gb…).</li>
+<li><strong>Modes</strong> — Major, Natural minor, Major pentatonic, Minor pentatonic.</li>
+</ul>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 0 16px">
+<li><strong>Free mode</strong> (Default) — check notes on the wheel, then click <strong>Correct</strong> to see errors.</li>
+<li><strong>Quiz mode</strong> — timed: find all scale notes with real-time feedback and a final score.</li>
+<li><strong>Yes / No Quiz</strong> — a note appears randomly, answer <strong>Yes</strong> if it belongs to the scale, <strong>No</strong> otherwise.</li>
+</ul>
+</div>
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+<h3 style="font-size:16px;color:var(--accent);margin-bottom:8px;font-weight:700">🎸 Learning the fretboard</h3>
+<p style="font-size:13px;color:var(--muted);line-height:1.8">Learn fretboard notes <strong>note by note</strong>. To work on a full scale, use the <strong>Scale on the fretboard</strong> module. Select one or more target notes (natural and accidental) to find on the neck.</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px"><strong>Practice zone:</strong> target a specific area of the neck.</p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 8px 16px">
+<li><strong>Frets</strong> — set a fret range using the From / To fields.</li>
+<li><strong>Strings</strong> — first click isolates a string; next clicks add strings; clicking an active string removes it; ↺ resets all.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted);line-height:1.8">⚠️ <strong>Important</strong> — always configure the practice zone <em>before</em> starting any quiz.</p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:8px 0 0 16px">
+<li><strong>Free mode</strong> (Default) — click at your own pace, then <strong>Correct</strong>.</li>
+<li><strong>Quiz mode</strong> — timed test on selected notes with real-time feedback. A full correction is displayed at the end of the exercise.</li>
+<li><strong>Random quiz — Find the note</strong> — a cell lights up, identify it among 12 options.</li>
+<li><strong>Random quiz — Place the note</strong> — a note name is shown, find all its positions in the zone and validate. A hint on the number of cells is available.</li>
+</ul>
+</div>
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+<h3 style="font-size:16px;color:var(--accent);margin-bottom:8px;font-weight:700">🗺️ Scale on the fretboard</h3>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 8px 16px">
+<li><strong>Accidentals</strong> — sharps or flats.</li>
+<li><strong>Root</strong> — all 12 roots available.</li>
+<li><strong>Mode</strong> — Major, Natural minor, Major or Minor pentatonic.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted);line-height:1.8"><strong>Practice zone:</strong> same as "Learn the fretboard" — always configure before starting.</p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:8px 0 8px 16px">
+<li><strong>Free mode</strong> (Default) — place all scale notes, then click <strong>Correct</strong>.</li>
+<li><strong>Quiz mode</strong> — real-time feedback on each click. Great for practicing a scale in a zone without strict degree order. Final correction displayed at the end.</li>
+<li><strong>Random quiz</strong> — a scale cell lights up, guess the note among 12. Instant feedback. Overall results display coming in a future update.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted);line-height:1.8"><strong style="font-size:14px">🎵 Run the scale</strong> — the highlight of this module. Play the scale degrees in order (e.g. C major: C–D–E–F–G–A–B–C) by clicking cells on the neck, with no visual hints.</p>
+<ul style="font-size:13px;color:var(--muted);line-height:1.9;margin:4px 0 8px 16px">
+<li><strong>Repetitions</strong> — choose how many times to run the scale. With 2 reps, the closing note of rep 1 becomes the opening of rep 2 (e.g. …B–C–D–E–F–G–A–B–C) and the exercise ends once the scale has been played twice. Already played cells cannot be selected again.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted);line-height:1.8"><strong style="font-size:14px">🎸 Pentatonic positions</strong> — when the Pentatonic mode is selected in the mode panel, "Run the scale" lets you work a specific CAGED position. The position is previewed in yellow before you start, so you can make sure you are working the right position.</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px">⚠️ Positions are calibrated on <strong>G major and Am</strong>. Other keys are transposed and may contain slight inaccuracies. Practising on G major and Am is recommended.</p>
+<p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px">💡 <strong>Tip</strong> — to practice the pentatonic on specific strings only, <strong>Random quiz → Find the note</strong> is far better suited: on two strings, staying in the scale matters more than playing in degree order.</p>
+</div>`,
+    intro_changelog_content: `<div style="margin-bottom:14px"><strong>Version 1.3</strong> <span style="font-size:11px;background:#c4b5fd;color:#4c1d95;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700">Latest version</span><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎵 <strong>Run the scale</strong> — ordered exercise with note and error display</li><li>🎸 <strong>5 pentatonic positions</strong> — CAGED positions with yellow preview</li><li>🎲 <strong>Random quiz</strong> — in "Learn the fretboard" and "Scale on the fretboard"</li><li>🔄 Shuffle bag — all notes seen before repetition</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.2</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎡 Interactive <strong>chromatic wheel</strong> in "Working on scales"</li><li>🎲 <strong>Yes/No quiz</strong> in "Working on scales"</li><li>🌐 Full FR/EN bilingual interface</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border)"><strong>Version 1.0</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎼 "Working on scales" module with timed quiz</li><li>🎸 "Learn the fretboard" module with practice zone</li><li>🗺️ "Scale on the fretboard" module with major, minor and pentatonic modes</li></ul></div>`,
     walk_repeat_label: 'Repetitions:',
     walk_max_hint:   (n) => 'max ' + n + ' in this zone',
     walk_setup_desc: (s, reps) => 'Run the scale (' + s + ' notes + octave) ' + reps + ' time(s) in order, without hints.',
