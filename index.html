@@ -262,6 +262,32 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   background: #c4b5fd !important;
   outline: 2px solid #7c3aed;
 }
+/* Parcourir la gamme */
+.gcell.walk-active  { background: #fef08a !important; outline: 2px solid #eab308; cursor: pointer; }
+.gcell.walk-done    { background: #86efac !important; z-index: 0; pointer-events: none; }
+.gstring.walk-open  { cursor: pointer; background: #fef9c3; border: 2px solid #eab308; transition: background .1s; z-index: 0; }
+.gstring.walk-open:hover { background: #fef08a; }
+.gstring.walk-open-done  { background: #86efac !important; border: 2px solid #22c55e; cursor: default; }
+.gstring.walk-open-error { animation: walk-shake .3s ease; background: #fca5a5 !important; border: 2px solid #ef4444; }
+.gcell.walk-error   { background: #fca5a5 !important; outline: 2px solid #ef4444; animation: walk-shake .3s ease; }
+.walk-panel {
+  background: var(--surface);
+  border: 2px solid #eab308;
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.walk-title   { font-family:'DM Serif Display',serif; font-size:18px; color:#854d0e; }
+.walk-target  { font-size:15px; font-weight:700; color:#854d0e; margin:10px 0 6px; min-height:1.5em; }
+.walk-info    { font-size:13px; color:var(--muted); margin-bottom:10px; }
+.walk-feedback { font-size:14px; font-weight:700; min-height:1.4em; margin-top:8px; }
+.walk-feedback.ok  { color:#16a34a; }
+.walk-feedback.bad { color:#dc2626; }
+@keyframes walk-shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-4px); }
+  75%      { transform: translateX(4px); }
+}
 /* mode selector tabs */
 .rquiz-mode-tabs { display:flex; gap:8px; margin-bottom:14px; }
 .rquiz-mode-tab {
@@ -276,8 +302,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .board { display:grid; gap:2px; background:#2a2a2a; padding:6px; width:100%; border-radius:8px; }
 .gcell,.gheader,.gstring { height:40px; display:flex; justify-content:center; align-items:center; font-size:11px; background:white; }
 .gheader { background:#ddd; height:26px; font-weight:700; font-size:11px; border-radius:3px; }
-.gstring { background:#ddd; font-weight:700; font-size:13px; border-radius:3px; width:40px; }
-.gcell { cursor:pointer; border-radius:3px; transition:background .1s; font-size:11px; font-weight:600; position:relative; overflow:visible; }
+.gstring { background:#ddd; font-weight:700; font-size:13px; border-radius:3px; width:40px; position:relative; overflow:visible; }
+.gcell { cursor:pointer; border-radius:3px; transition:background .1s; font-size:11px; font-weight:600; position:relative; overflow:visible; isolation:isolate; }
 .gcell.selected { background:var(--blue); }
 .gcell.correct  { background:var(--green); }
 .gcell.wrong    { background:var(--red); }
@@ -622,7 +648,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div class="quiz-info" id="m-quiz-info"></div>
     <div class="timer-txt" id="m-timer" data-i18n="timer_zero">Temps : 0s</div>
   </div>
-  <div class="board-wrap"><div class="board" id="m-board"></div></div>
 
   <!-- Quiz aléatoire module 2 -->
   <div class="rquiz-panel" id="m-rquiz-panel" style="display:none">
@@ -630,12 +655,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <span class="rquiz-title" data-i18n="rq_title">🎲 Quiz aléatoire</span>
       <span class="rquiz-progress" id="m-rquiz-progress"></span>
     </div>
-
-    <!-- Setup -->
     <div id="m-rquiz-setup">
-      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
-        <span data-i18n="rq_m_desc">Choisissez un mode et un nombre de questions, puis lancez le chrono.<br><strong style="color:#4c1d95">🔍 Trouver la note</strong> — une case s'allume, cliquez la bonne note parmi les 12.<br><strong style="color:#4c1d95">📍 Placer la note</strong> — une note est affichée, trouvez toutes ses cases puis validez.</span>
-      </p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;"><span data-i18n="rq_m_desc">Choisissez un mode et un nombre de questions, puis lancez le chrono.</span></p>
       <div class="panel-label" style="margin-bottom:10px">Mode</div>
       <div class="rquiz-mode-tabs">
         <span class="rquiz-mode-tab active" id="m-rq-tab-find" onclick="mRqSetMode('find',this)" data-i18n="rq_mode_find">🔍 Trouver la note</span>
@@ -647,8 +668,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <button class="btn btn-rquiz" onclick="mRqStart()" data-i18n="rq_start">▶ Démarrer</button>
       </div>
     </div>
-
-    <!-- Question -->
     <div id="m-rquiz-question" style="display:none">
       <div class="rquiz-question" id="m-rquiz-q-text"></div>
       <div id="m-rquiz-place-info" style="display:none;margin-bottom:10px;">
@@ -664,8 +683,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <button class="btn btn-rquiz-stop" onclick="mRqStop()" data-i18n="rq_stop">⏹ Arrêter</button>
       </div>
     </div>
-
-    <!-- Résultat final -->
     <div id="m-rquiz-result" style="display:none">
       <div class="rquiz-score-final" id="m-rquiz-score-final"></div>
       <div class="btn-row" style="margin-top:12px">
@@ -674,6 +691,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
     </div>
   </div>
+  <div class="board-wrap"><div class="board" id="m-board"></div></div>
 </div>
 
 <!-- ══ MODULE 3 — GAMMES SUR LE MANCHE ══ -->
@@ -740,12 +758,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div>
 
   <div class="panel">
+    <div style="margin-bottom:12px;">
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:6px">
+        <strong style="color:#7c3aed">🎲 Quiz aléatoire</strong> — <span data-i18n="gm_rquiz_hint">Une case de la gamme s'allume, devinez la note parmi les 12 proposées.</span>
+      </p>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6">
+        <strong style="color:#854d0e">🎵 Parcourir la gamme</strong> — <span data-i18n="gm_walk_hint">Jouez la gamme dans l'ordre sur le manche, de la fondamentale à l'octave, sans indice.</span>
+      </p>
+    </div>
     <div class="btn-row">
       <button class="btn btn-primary" id="gm-btn-corriger" onclick="gmCorrect()" data-i18n="btn_correct">Corriger</button>
       <button class="btn btn-gray"    id="gm-btn-reset"    onclick="gmReset()" data-i18n="btn_reset">Reset</button>
       <button class="btn btn-quiz"    id="gm-btn-quiz"     onclick="gmStartQuiz()" data-i18n="btn_quiz">Quiz</button>
       <button class="btn btn-stop"    id="gm-btn-stop"     onclick="gmStopQuizManual()" style="display:none" data-i18n="btn_stop">⏹ Arrêter & corriger</button>
       <button class="btn btn-rquiz"  id="gm-btn-rquiz"  onclick="gmRqOpen()" data-i18n="btn_rquiz">🎲 Quiz aléatoire</button>
+      <button class="btn" id="gm-btn-walk" onclick="gmWalkOpen()" style="background:#eab308;color:#1a1a1a;font-weight:700" data-i18n="btn_walk">🎵 Parcourir la gamme</button>
     </div>
     <div class="score-row">
       <span class="score-badge" id="gm-badge-ok">  <span class="score-dot dot-green"></span><span id="gm-cnt-ok">0</span></span>
@@ -757,7 +784,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div class="timer-txt" id="gm-timer" data-i18n="timer_zero">Temps : 0s</div>
   </div>
 
-  <div class="board-wrap"><div class="board" id="gm-board"></div></div>
 
   <!-- Quiz aléatoire module 3 -->
   <div class="rquiz-panel" id="gm-rquiz-panel" style="display:none">
@@ -765,20 +791,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <span class="rquiz-title" data-i18n="rq_title">🎲 Quiz aléatoire</span>
       <span class="rquiz-progress" id="gm-rquiz-progress"></span>
     </div>
-
-    <!-- Setup -->
     <div id="gm-rquiz-setup">
-      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
-        <span data-i18n="rq_gm_desc">Une case aléatoire de la gamme s'allume sans afficher son nom. Identifiez-la parmi les 12 notes proposées. Feedback immédiat, puis cliquez <strong style="color:#4c1d95" data-i18n="rq_next">Suivant</strong>.</span>
-      </p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;"><span data-i18n="rq_gm_desc">Une case aléatoire de la gamme s'allume sans afficher son nom. Identifiez-la parmi les 12 notes proposées. Feedback immédiat, puis cliquez <strong style="color:#4c1d95" data-i18n="rq_next">Suivant</strong>.</span></p>
       <div class="panel-label" style="margin-bottom:10px" data-i18n="rq_nb_q">Nombre de questions</div>
       <div class="rquiz-setup">
         <input class="rquiz-count-input" type="number" id="gm-rquiz-count" min="1" max="50" value="10" onfocus="this.select()">
         <button class="btn btn-rquiz" onclick="gmRqStart()" data-i18n="rq_start">▶ Démarrer</button>
       </div>
     </div>
-
-    <!-- Question -->
     <div id="gm-rquiz-question" style="display:none">
       <div class="rquiz-question" id="gm-rquiz-q-text"></div>
       <div class="rquiz-note-pills" id="gm-rquiz-pills"></div>
@@ -788,8 +808,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <button class="btn btn-rquiz-stop" onclick="gmRqStop()" data-i18n="rq_stop">⏹ Arrêter</button>
       </div>
     </div>
-
-    <!-- Résultat final -->
     <div id="gm-rquiz-result" style="display:none">
       <div class="rquiz-score-final" id="gm-rquiz-score-final"></div>
       <div class="btn-row" style="margin-top:12px">
@@ -798,6 +816,35 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
     </div>
   </div>
+
+  <!-- Parcourir la gamme -->
+  <div class="walk-panel" id="gm-walk-panel" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <span class="walk-title">🎵 Parcourir la gamme</span>
+      <span style="font-size:13px;font-weight:700;color:#854d0e" id="gm-walk-progress"></span>
+    </div>
+    <div id="gm-walk-setup">
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px" id="gm-walk-setup-desc"></p>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+        <span style="font-size:13px;font-weight:600;color:var(--muted)" data-i18n="walk_repeat_label">Répétitions :</span>
+        <input class="rquiz-count-input" type="number" id="gm-walk-reps" min="1" value="1" onfocus="this.select()">
+        <span style="font-size:12px;color:var(--muted)" id="gm-walk-max-hint"></span>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="gmWalkStart()" style="background:#eab308;color:#1a1a1a;font-weight:700" data-i18n="rq_start">▶ Démarrer</button>
+        <button class="btn btn-gray" onclick="gmWalkClose()" data-i18n="rq_close">Fermer</button>
+      </div>
+    </div>
+    <div id="gm-walk-exercise" style="display:none">
+      <p class="walk-info" id="gm-walk-desc"></p>
+      <div class="walk-feedback" id="gm-walk-feedback"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn" onclick="gmWalkStop()" style="background:#1a1a1a;color:white;font-weight:700" data-i18n="rq_stop">⏹ Arrêter</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="board-wrap"><div class="board" id="gm-board"></div></div>
 </div>
 
 <script>
@@ -1574,7 +1621,7 @@ function gmBuildBoard() {
       c.dataset.fret      = f;
       c.dataset.strIdx    = si;  // 0=Mi aigu … 5=Mi grave
       c.dataset.selected  = 'false';
-      c.onclick = () => { if (!gmQuizMode) gmToggle(c); else gmQuizClick(c); };
+      c.onclick = () => { if (gmWalkMode) return; if (!gmQuizMode) gmToggle(c); else gmQuizClick(c); };
       board.appendChild(c); gmCells.push(c);
     }
   });
@@ -1619,6 +1666,7 @@ function gmShowCellNote(c, name, isWrong) {
 
 function gmReset() {
   if (gmQuizMode) gmStopQuiz();
+  if (gmWalkMode) gmWalkStop();
   gmWrongCells.clear();
   gmCells.forEach(c => {
     c.dataset.selected='false'; c.className='gcell';
@@ -1794,6 +1842,259 @@ function bagPick(bagState) {
     bagState.deck = shuffleBag([...bagState.pool]);
   }
   return bagState.deck.shift();
+}
+
+/* ══════════════════════════════════════════
+   MODULE 3 — PARCOURIR LA GAMME
+══════════════════════════════════════════ */
+let gmWalkMode      = false;
+let gmWalkScaleBase = [];   // notes de la gamme sans octave (ex: 7 notes)
+let gmWalkFullSeq   = [];   // séquence complète : N répétitions × (notes + octave) = indices chromatiques
+let gmWalkStep      = 0;    // position dans gmWalkFullSeq
+let gmWalkRep       = 1;    // répétition courante
+let gmWalkReps      = 1;    // nombre total de répétitions
+let gmWalkCells     = [];   // cellules actives de la zone
+
+function gmWalkOpen() {
+  const targetChr = getScaleChromatic(gmCurrentRootChromatic, gmCurrentMode);
+  const activeCells = gmGetActiveCells();
+  gmWalkCells = activeCells.filter(c => targetChr.includes(parseInt(c.dataset.chromatic)));
+  if (!gmWalkCells.length) { alert(T('alert_no_gm')); return; }
+
+  gmWalkScaleBase = targetChr; // ex: [0,2,4,5,7,9,11] pour majeure
+
+  // Calcul du max de répétitions : nombre d'occurrences de la fondamentale dans la zone
+  const rootChr   = gmCurrentRootChromatic;
+  let rootCount = gmWalkCells.filter(c => parseInt(c.dataset.chromatic) === rootChr).length;
+  if (gmFretMin === 1) {
+    STRINGS.forEach((s, si) => {
+      if (gmActiveStrings.has(si) && NOTES_SHARP.indexOf(s) === rootChr) rootCount++;
+    });
+  }
+  const maxReps = Math.max(1, rootCount - 1);
+
+  // Affichage setup
+  document.getElementById('gm-walk-reps').max   = maxReps;
+  document.getElementById('gm-walk-reps').value = 1;
+  document.getElementById('gm-walk-max-hint').textContent = T('walk_max_hint', maxReps);
+
+  const scaleSize = gmWalkScaleBase.length;
+  document.getElementById('gm-walk-setup-desc').textContent =
+    T('walk_setup_desc', scaleSize, 1);
+
+  // Mettre à jour la desc quand l'input change
+  const repsInput = document.getElementById('gm-walk-reps');
+  repsInput.oninput = () => {
+    let v = Math.max(1, Math.min(maxReps, parseInt(repsInput.value) || 1));
+    document.getElementById('gm-walk-setup-desc').textContent = T('walk_setup_desc', scaleSize, v);
+  };
+
+  document.getElementById('gm-walk-panel').style.display   = 'block';
+  document.getElementById('gm-walk-setup').style.display    = 'block';
+  document.getElementById('gm-walk-exercise').style.display = 'none';
+  document.getElementById('gm-walk-panel').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function gmWalkClose() {
+  document.getElementById('gm-walk-panel').style.display = 'none';
+}
+
+function gmWalkStart() {
+  const rootChr   = gmCurrentRootChromatic;
+  let rootCount = gmWalkCells.filter(c => parseInt(c.dataset.chromatic) === rootChr).length;
+  if (gmFretMin === 1) {
+    STRINGS.forEach((s, si) => {
+      if (gmActiveStrings.has(si) && NOTES_SHARP.indexOf(s) === rootChr) rootCount++;
+    });
+  }
+  const maxReps = Math.max(1, rootCount - 1);
+  gmWalkReps = Math.max(1, Math.min(maxReps, parseInt(document.getElementById('gm-walk-reps').value) || 1));
+  gmWalkRep  = 1;
+  gmWalkStep = 0;
+  gmWalkMode = true;
+
+  // Construire la séquence complète : pour chaque répétition, les 7 (ou 5) notes + octave (fondamentale)
+  // La fondamentale de clôture d'un passage = degré 1 du suivant
+  // Ex 2 passages Do maj : Do Ré Mi Fa Sol La Si Do Ré Mi Fa Sol La Si Do
+  gmWalkFullSeq = [...gmWalkScaleBase];
+  for (let r = 1; r < gmWalkReps; r++) {
+    gmWalkFullSeq.push(gmCurrentRootChromatic);       // do partagé
+    gmWalkScaleBase.slice(1).forEach(chr => gmWalkFullSeq.push(chr)); // ré→si
+  }
+  gmWalkFullSeq.push(gmCurrentRootChromatic);         // octave finale
+
+  ['gm-btn-corriger','gm-btn-quiz','gm-btn-reset','gm-btn-rquiz','gm-btn-walk'].forEach(id =>
+    document.getElementById(id).disabled = true);
+
+  gmResetSilent();
+  document.getElementById('gm-walk-setup').style.display    = 'none';
+  document.getElementById('gm-walk-exercise').style.display = 'block';
+  document.getElementById('gm-walk-feedback').textContent   = '';
+  document.getElementById('gm-walk-feedback').className     = 'walk-feedback';
+  gmWalkUpdateProgress();
+
+  // Attacher le handler walk sur toutes les cellules actives de la zone
+  // (pas seulement celles de la gamme) pour intercepter les erreurs
+  const gmAllActiveCells = gmGetActiveCells();
+  gmAllActiveCells.forEach(c => {
+    c._walkHandler = () => gmWalkClick(c);
+    c.addEventListener('click', c._walkHandler);
+  });
+
+  // Cordes à vide cliquables si frette min = 1
+  if (gmFretMin === 1) {
+    const targetChr = getScaleChromatic(gmCurrentRootChromatic, gmCurrentMode);
+    const board = document.getElementById('gm-board');
+    board.querySelectorAll('.gstring').forEach((lbl, si) => {
+      const openNote = STRINGS[si];
+      const chr = NOTES_SHARP.indexOf(openNote);
+      if (!gmActiveStrings.has(si)) return; // corde désactivée
+      if (!targetChr.includes(chr)) return; // note pas dans la gamme
+      lbl.classList.add('walk-open');
+      lbl._walkOpenHandler = () => gmWalkClickOpen(lbl, chr);
+      lbl.addEventListener('click', lbl._walkOpenHandler);
+    });
+  }
+}
+
+function gmWalkClickOpen(lbl, chr) {
+  if (!gmWalkMode) return;
+  const targetChr  = gmWalkFullSeq[gmWalkStep];
+  const fb         = document.getElementById('gm-walk-feedback');
+  const noteList   = getNoteList(gmAlt);
+  const targetName = noteList.find(e => e.chromatic === targetChr)?.display || NOTES_SHARP[targetChr];
+
+  // Afficher la note comme si elle sonnait (bulle sur l'étiquette)
+  const clickedName2 = noteList.find(e => e.chromatic === chr)?.display || NOTES_SHARP[chr];
+  const tag2 = document.createElement('span');
+  tag2.className   = 'note-ring' + (chr === targetChr ? '' : ' wrong-ring');
+  tag2.textContent = clickedName2;
+  tag2.style.cssText = 'position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%) scale(0.6);';
+  lbl.appendChild(tag2);
+  setTimeout(() => tag2.remove(), 1400);
+
+  if (chr === targetChr) {
+    // Bonne note à vide — un seul clic valide
+    lbl.classList.add('walk-open-done');
+    lbl.classList.remove('walk-open');
+    fb.textContent = '';
+    fb.className   = 'walk-feedback';
+    gmWalkStep++;
+    const scLen3 = gmWalkScaleBase.length;
+    const repDone3 = Math.floor(gmWalkStep / scLen3);
+    if (gmWalkStep % scLen3 === 0 && gmWalkStep < gmWalkFullSeq.length && repDone3 > 0) {
+      fb.textContent = T('walk_rep_done', repDone3, gmWalkReps);
+      fb.className   = 'walk-feedback ok';
+    }
+    if (gmWalkStep >= gmWalkFullSeq.length) { gmWalkEnd(); }
+    else { gmWalkUpdateProgress(); }
+  } else {
+    // Mauvaise note — flash rouge
+    lbl.classList.add('walk-open-error');
+    setTimeout(() => lbl.classList.remove('walk-open-error'), 700);
+    fb.textContent = T('walk_error', targetName);
+    fb.className   = 'walk-feedback bad';
+  }
+}
+
+function gmWalkUpdateProgress() {
+  const scLen     = gmWalkScaleBase.length;
+  const stepInRep = (gmWalkStep % scLen) + 1;
+  gmWalkRep = Math.min(Math.floor(gmWalkStep / scLen) + 1, gmWalkReps);
+  document.getElementById('gm-walk-progress').textContent =
+    T('walk_progress', stepInRep, scLen + 1, gmWalkRep, gmWalkReps);
+  document.getElementById('gm-walk-desc').textContent =
+    'Trouvez et cliquez la bonne note — sans indice !';
+}
+
+function gmWalkShowNoteRing(c, noteName, isCorrect) {
+  const tag = document.createElement('span');
+  tag.className   = 'note-ring' + (isCorrect ? '' : ' wrong-ring');
+  tag.textContent = noteName;
+  c.appendChild(tag);
+  setTimeout(() => tag.remove(), 1400);
+}
+
+function gmWalkClick(c) {
+  if (!gmWalkMode) return;
+  const chr        = parseInt(c.dataset.chromatic);
+  const targetChr  = gmWalkFullSeq[gmWalkStep];
+  const fb         = document.getElementById('gm-walk-feedback');
+  const noteList   = getNoteList(gmAlt);
+  const clickedName = noteList.find(e => e.chromatic === chr)?.display || NOTES_SHARP[chr];
+  const targetName  = noteList.find(e => e.chromatic === targetChr)?.display || NOTES_SHARP[targetChr];
+
+  // Afficher la note cliquée comme si elle sonnait
+  gmWalkShowNoteRing(c, clickedName, chr === targetChr);
+
+  if (chr === targetChr) {
+    // Bonne note — retirer le handler de cette case pour éviter tout clic ultérieur
+    if (c._walkHandler) {
+      c.removeEventListener('click', c._walkHandler);
+      delete c._walkHandler;
+    }
+    c.onclick = null;
+    c.style.pointerEvents = 'none';
+    c.classList.add('walk-done');
+    fb.textContent = '';
+    fb.className   = 'walk-feedback';
+    gmWalkStep++;
+
+    const scLen2 = gmWalkScaleBase.length;
+    const repDone2 = Math.floor(gmWalkStep / scLen2);
+    if (gmWalkStep % scLen2 === 0 && gmWalkStep < gmWalkFullSeq.length && repDone2 > 0) {
+      fb.textContent = T('walk_rep_done', repDone2, gmWalkReps);
+      fb.className   = 'walk-feedback ok';
+    }
+    if (gmWalkStep >= gmWalkFullSeq.length) { gmWalkEnd(); }
+    else { gmWalkUpdateProgress(); }
+  } else {
+    // Mauvaise note — flash rouge puis disparaît
+    c.classList.add('walk-error');
+    setTimeout(() => c.classList.remove('walk-error'), 700);
+    fb.textContent = T('walk_error', targetName);
+    fb.className   = 'walk-feedback bad';
+  }
+}
+
+function gmWalkEnd() {
+  gmWalkDetachHandlers();
+  gmWalkMode = false;
+  const fb = document.getElementById('gm-walk-feedback');
+  fb.textContent = T('walk_done');
+  fb.className   = 'walk-feedback ok';
+  document.getElementById('gm-walk-progress').textContent = '✓';
+  document.getElementById('gm-walk-desc').textContent    = '';
+  ['gm-btn-corriger','gm-btn-quiz','gm-btn-reset','gm-btn-rquiz','gm-btn-walk'].forEach(id =>
+    document.getElementById(id).disabled = false);
+}
+
+function gmWalkStop() {
+  gmWalkDetachHandlers();
+  gmWalkMode = false;
+  gmResetSilent();
+  document.getElementById('gm-walk-panel').style.display   = 'none';
+  document.getElementById('gm-walk-setup').style.display    = 'block';
+  document.getElementById('gm-walk-exercise').style.display = 'none';
+  ['gm-btn-corriger','gm-btn-quiz','gm-btn-reset','gm-btn-rquiz','gm-btn-walk'].forEach(id =>
+    document.getElementById(id).disabled = false);
+}
+
+function gmWalkDetachHandlers() {
+  // Retirer les handlers walk sur toutes les cellules actives (pas seulement celles de la gamme)
+  gmGetActiveCells().forEach(c => {
+    if (c._walkHandler) { c.removeEventListener('click', c._walkHandler); delete c._walkHandler; }
+    c.onclick = () => { if (gmWalkMode) return; if (!gmQuizMode) gmToggle(c); else gmQuizClick(c); };
+    c.style.pointerEvents = '';
+  });
+  document.querySelectorAll('#gm-board .gstring').forEach(lbl => {
+    if (lbl._walkOpenHandler) {
+      lbl.removeEventListener('click', lbl._walkOpenHandler);
+      delete lbl._walkOpenHandler;
+    }
+    lbl.classList.remove('walk-open', 'walk-open-done', 'walk-open-error');
+    lbl.style.pointerEvents = '';
+  });
 }
 
 /* ══════════════════════════════════════════
@@ -2396,6 +2697,17 @@ const LANG = {
     rq_partial:      '✗ Pas tout à fait — les cases manquantes sont en orange',
     rq_yn_desc:      '<strong>Mode libre</strong> Une note s\'affiche — répondez <strong style="color:#22c55e">Oui</strong> si elle fait partie de la gamme, <strong style="color:#ef4444">Non</strong> sinon.',
     rq_interrupted:  'quiz interrompu',
+    btn_walk:        '🎵 Parcourir la gamme',
+    walk_desc:       (n, t) => 'Cliquez les notes de la gamme dans l\'ordre en partant de la fondamentale. Note suivante : ' + n + ' (étape ' + t + ')',
+    walk_done:       '🎉 Gamme complète ! Bien joué !',
+    walk_error:      (n) => '✗ Mauvaise note — attendu : ' + n,
+    gm_rquiz_hint:   'Une case de la gamme s\'allume, devinez la note parmi les 12 proposées.',
+    gm_walk_hint:    'Jouez la gamme dans l\'ordre sur le manche, de la fondamentale à l\'octave, sans indice.',
+    walk_repeat_label: 'Répétitions :',
+    walk_max_hint:   (n) => 'max ' + n + ' sur cette zone',
+    walk_setup_desc: (s, reps) => 'Parcourez la gamme (' + s + ' notes + octave) ' + reps + ' fois de suite, dans l\'ordre, sans indice.',
+    walk_progress:   (step, total, rep, reps) => 'Note ' + step + '/' + total + ' · Passage ' + rep + '/' + reps,
+    walk_rep_done:   (rep, reps) => '✓ Passage ' + rep + '/' + reps + ' complet !',
     rq_yn_desc_full: "Une note s'affiche — répondez <strong style='color:#22c55e'>Oui</strong> si elle fait partie de la gamme, <strong style='color:#ef4444'>Non</strong> sinon. Feedback immédiat.",
     rq_m_desc:       "Choisissez un mode et un nombre de questions, puis lancez le chrono.<br><strong style='color:#4c1d95'>🔍 Trouver la note</strong> — une case s'allume, cliquez la bonne note parmi les 12.<br><strong style='color:#4c1d95'>📍 Placer la note</strong> — une note est affichée, trouvez toutes ses cases puis validez.",
     rq_gm_desc:      "Une case aléatoire de la gamme s'allume sans afficher son nom. Identifiez-la parmi les 12 notes proposées. Feedback immédiat, puis cliquez <strong style='color:#4c1d95'>Suivant</strong>.",
@@ -2479,6 +2791,17 @@ const LANG = {
     rq_partial:      '✗ Not quite — missed positions are in orange',
     rq_yn_desc:      'A note appears — answer <strong style="color:#22c55e">Yes</strong> if it belongs to the scale, <strong style="color:#ef4444">No</strong> otherwise.',
     rq_interrupted:  'quiz stopped',
+    btn_walk:        '🎵 Run the scale',
+    walk_desc:       (n, t) => 'Click the scale notes in order starting from the root. Next note: ' + n + ' (step ' + t + ')',
+    walk_done:       '🎉 Scale complete! Well done!',
+    walk_error:      (n) => '✗ Wrong note — expected: ' + n,
+    gm_rquiz_hint:   'A scale cell lights up — guess the note among the 12 shown.',
+    gm_walk_hint:    'Play the scale in order on the fretboard, from the root to the octave, without hints.',
+    walk_repeat_label: 'Repetitions:',
+    walk_max_hint:   (n) => 'max ' + n + ' in this zone',
+    walk_setup_desc: (s, reps) => 'Run the scale (' + s + ' notes + octave) ' + reps + ' time(s) in order, without hints.',
+    walk_progress:   (step, total, rep, reps) => 'Note ' + step + '/' + total + ' · Run ' + rep + '/' + reps,
+    walk_rep_done:   (rep, reps) => '✓ Run ' + rep + '/' + reps + ' complete!',
     rq_yn_desc_full: "A note appears — answer <strong style='color:#22c55e'>Yes</strong> if it belongs to the scale, <strong style='color:#ef4444'>No</strong> otherwise. Immediate feedback.",
     rq_m_desc:       "Choose a mode and a number of questions, then start.<br><strong style='color:#4c1d95'>🔍 Find the note</strong> — a cell lights up, click the correct note among the 12.<br><strong style='color:#4c1d95'>📍 Place the note</strong> — a note is shown, find all its positions then validate.",
     rq_gm_desc:      "A random scale cell lights up without showing its name. Identify it among the 12 notes. Immediate feedback, then click <strong style='color:#4c1d95'>Next</strong>.",
