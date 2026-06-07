@@ -452,6 +452,41 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   from { opacity:0; transform:scale(0.7); }
   to   { opacity:1; transform:scale(1); }
 }
+
+/* ══ TOGGLE MOBILE ══ */
+.mobile-toggle-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 18px; border-radius: 10px; border: 2px solid var(--border);
+  background: var(--bg); font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; color: var(--muted); transition: all .15s;
+  user-select: none;
+}
+.mobile-toggle-btn:hover { border-color: #7c3aed; color: #7c3aed; }
+.mobile-toggle-btn.active { background: #7c3aed; border-color: #7c3aed; color: white; }
+
+/* ══ MODE MOBILE ══ */
+body.mobile-mode .page-inner { padding: 16px 12px 48px; }
+body.mobile-mode #page-home  { padding: 40px 16px 32px; }
+body.mobile-mode .gcell   { height: 48px; font-size: 12px; }
+body.mobile-mode .gheader { height: 30px; font-size: 12px; }
+body.mobile-mode .gstring { height: 48px; font-size: 14px; width: 36px; }
+body.mobile-mode .board-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+body.mobile-mode .board { min-width: max-content; width: max-content; }
+body.mobile-mode .board .gcell { min-width: 40px; }
+body.mobile-mode .chromatic-wheel { width: 280px; height: 280px; }
+body.mobile-mode .pill { padding: 8px 14px; font-size: 14px; }
+body.mobile-mode .btn  { padding: 12px 18px; font-size: 15px; min-height: 44px; }
+body.mobile-mode .btn-row { gap: 10px; }
+body.mobile-mode .note-ring { font-size: 13px; padding: 4px 10px; }
+/* Hint frette penta mobile */
+.mob-penta-fret-hint {
+  display: none; font-size: 12px; color: #7c3aed; font-weight: 700; margin-top: 4px;
+}
+body.mobile-mode .mob-penta-fret-hint { display: block; }
+@media (max-width: 400px) {
+  body.mobile-mode .panel { padding: 14px 14px; }
+  body.mobile-mode .module-card { padding: 20px 16px; gap: 14px; }
+}
 </style>
 </head>
 <body>
@@ -459,6 +494,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <div class="lang-bar">
   <span class="lang-btn active" onclick="setLang('fr',this)"><img src="https://flagcdn.com/24x18/fr.png" width="24" height="18" alt="FR" style="border-radius:2px;vertical-align:middle"> Français</span>
   <span class="lang-btn"        onclick="setLang('en',this)"><img src="https://flagcdn.com/24x18/gb.png" width="24" height="18" alt="EN" style="border-radius:2px;vertical-align:middle"> English</span>
+  <span class="mobile-toggle-btn" id="mob-toggle-btn" onclick="toggleMobileMode(this)">📱 Mobile</span>
 </div>
 
 <!-- ══ ACCUEIL ══ -->
@@ -865,6 +901,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <div class="panel-label" style="margin-bottom:8px">Position</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap" id="gm-walk-pos-btns"></div>
         <p style="font-size:12px;color:var(--muted);margin-top:8px">La position s'affiche en jaune sur le manche — mémorisez-la, elle disparaît au démarrage.</p>
+        <p class="mob-penta-fret-hint" id="mob-penta-fret-hint"></p>
       </div>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px" id="gm-walk-reps-row">
         <span style="font-size:13px;font-weight:600;color:var(--muted)" data-i18n="walk_repeat_label">Répétitions :</span>
@@ -3061,7 +3098,7 @@ const LANG = {
 <p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px">⚠️ Les positions pentatoniques ont été paramétrées sur la gamme de <strong>Sol majeur (G) et La mineur (Am)</strong>. Les autres toniques sont obtenues par transposition et peuvent contenir des imprécisions. Il est donc recommandé de s'entraîner principalement sur <strong>G majeur et Am</strong>.</p>
 <p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px">💡 <strong>Conseil</strong> — si vous souhaitez travailler la pentatonique sur certaines cordes uniquement, le <strong>Quiz</strong> est nettement plus approprié que "Parcourir la gamme" : sur deux cordes, l'important est de rester dans la gamme, pas de jouer les notes dans un ordre précis.</p>
 </div>`,
-    intro_changelog_content: `<div style="margin-bottom:14px"><strong>Version 1.3</strong> <span style="font-size:11px;background:#c4b5fd;color:#4c1d95;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700">Dernière version</span><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎵 <strong>Parcourir la gamme</strong> — exercice ordonné avec affichage des notes et erreurs</li><li>🎸 <strong>5 positions pentatoniques</strong> — positions CAGED avec prévisualisation jaune</li><li>🎲 <strong>Quiz aléatoire</strong> — dans "Apprendre le manche" et "Gamme sur le manche"</li><li>🔄 Tirage sans remise — toutes les notes vues avant répétition</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.2</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎡 <strong>Roue chromatique</strong> interactive dans "Travailler ses gammes"</li><li>🎲 <strong>Quiz Oui/Non</strong> dans "Travailler ses gammes"</li><li>🌐 Interface bilingue FR/EN</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border)"><strong>Version 1.0</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎼 Module "Travailler ses gammes" avec quiz chronométré</li><li>🎸 Module "Apprendre le manche" avec zone de travail</li><li>🗺️ Module "Gamme sur le manche" avec modes majeur, mineur et pentatonique</li></ul></div>`,
+    intro_changelog_content: `<div style="margin-bottom:14px"><strong>Version 1.4</strong> <span style="font-size:11px;background:#c4b5fd;color:#4c1d95;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700">Dernière version</span><ul style="margin:6px 0 0 16px;line-height:1.9"><li>📱 <strong>Mode mobile</strong> — bouton 📱 Mobile dans la barre du haut, manche limité à 12 frettes optimisé smartphone</li><li>🎸 <strong>Positions pentatoniques en mobile</strong> — dans "Parcourir la gamme", les frettes min/max s'ajustent automatiquement à la position sélectionnée pour afficher l'ensemble des notes, même au-delà de la frette 12</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.3</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎵 <strong>Parcourir la gamme</strong> — exercice ordonné avec affichage des notes et erreurs</li><li>🎸 <strong>5 positions pentatoniques</strong> — positions CAGED avec prévisualisation jaune</li><li>🎲 <strong>Quiz aléatoire</strong> — dans "Apprendre le manche" et "Gamme sur le manche"</li><li>🔄 Tirage sans remise — toutes les notes vues avant répétition</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.2</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎡 <strong>Roue chromatique</strong> interactive dans "Travailler ses gammes"</li><li>🎲 <strong>Quiz Oui/Non</strong> dans "Travailler ses gammes"</li><li>🌐 Interface bilingue FR/EN</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.1</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎼 Module "Travailler ses gammes" avec quiz chronométré</li><li>🎸 Module "Apprendre le manche" avec zone de travail</li><li>🗺️ Module "Gamme sur le manche" avec modes majeur, mineur et pentatonique</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border)"><strong>Version 1.0</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🚀 Lancement initial du Kit du Grand Débutant</li></ul></div>`,
     walk_repeat_label: 'Répétitions :',
     walk_max_hint:   (n) => 'max ' + n + ' sur cette zone',
     walk_setup_desc: (s, reps) => 'Parcourez la gamme (' + s + ' notes + octave) ' + reps + ' fois de suite, dans l\'ordre, sans indice.',
@@ -3208,7 +3245,7 @@ const LANG = {
 <p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px">⚠️ Positions are calibrated on <strong>G major and Am</strong>. Other keys are transposed and may contain slight inaccuracies. Practising on G major and Am is recommended.</p>
 <p style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:8px">💡 <strong>Tip</strong> — to practice the pentatonic on specific strings only, <strong>Random quiz → Find the note</strong> is far better suited: on two strings, staying in the scale matters more than playing in degree order.</p>
 </div>`,
-    intro_changelog_content: `<div style="margin-bottom:14px"><strong>Version 1.3</strong> <span style="font-size:11px;background:#c4b5fd;color:#4c1d95;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700">Latest version</span><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎵 <strong>Run the scale</strong> — ordered exercise with note and error display</li><li>🎸 <strong>5 pentatonic positions</strong> — CAGED positions with yellow preview</li><li>🎲 <strong>Random quiz</strong> — in "Learn the fretboard" and "Scale on the fretboard"</li><li>🔄 Shuffle bag — all notes seen before repetition</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.2</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎡 Interactive <strong>chromatic wheel</strong> in "Working on scales"</li><li>🎲 <strong>Yes/No quiz</strong> in "Working on scales"</li><li>🌐 Full FR/EN bilingual interface</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border)"><strong>Version 1.0</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎼 "Working on scales" module with timed quiz</li><li>🎸 "Learn the fretboard" module with practice zone</li><li>🗺️ "Scale on the fretboard" module with major, minor and pentatonic modes</li></ul></div>`,
+    intro_changelog_content: `<div style="margin-bottom:14px"><strong>Version 1.4</strong> <span style="font-size:11px;background:#c4b5fd;color:#4c1d95;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700">Latest version</span><ul style="margin:6px 0 0 16px;line-height:1.9"><li>📱 <strong>Mobile mode</strong> — 📱 Mobile button in the top bar, 12-fret neck optimised for smartphone</li><li>🎸 <strong>Pentatonic positions on mobile</strong> — in "Run the scale", the fret range adjusts automatically to the selected position so all notes are visible, even beyond fret 12</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.3</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎵 <strong>Run the scale</strong> — ordered exercise with note and error display</li><li>🎸 <strong>5 pentatonic positions</strong> — CAGED positions with yellow preview</li><li>🎲 <strong>Random quiz</strong> — in "Learn the fretboard" and "Scale on the fretboard"</li><li>🔄 Shuffle bag — all notes seen before repetition</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.2</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎡 Interactive <strong>chromatic wheel</strong> in "Practice scales"</li><li>🎲 <strong>Yes/No quiz</strong> in "Practice scales"</li><li>🌐 Full FR/EN bilingual interface</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border);margin-bottom:14px"><strong>Version 1.1</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🎼 "Practice scales" module with timed quiz</li><li>🎸 "Learn the fretboard" module with practice zone</li><li>🗺️ "Scale on the fretboard" module with major, minor and pentatonic modes</li></ul></div><div style="padding-top:12px;border-top:1px solid var(--border)"><strong>Version 1.0</strong><ul style="margin:6px 0 0 16px;line-height:1.9"><li>🚀 Initial release of the Complete Beginner Kit</li></ul></div>`,
     walk_repeat_label: 'Repetitions:',
     walk_max_hint:   (n) => 'max ' + n + ' in this zone',
     walk_setup_desc: (s, reps) => 'Run the scale (' + s + ' notes + octave) ' + reps + ' time(s) in order, without hints.',
@@ -3257,6 +3294,135 @@ mBuildStringPills();
 gmBuildRoots();
 gmBuildStringPills();
 gmBuildBoard();
+
+/* ══════════════════════════════════════════════════════
+   MODE MOBILE — CODE ENTIÈREMENT ISOLÉ
+   Aucune fonction existante n'est modifiée.
+   On surcharge uniquement l'affichage via CSS + rebuild.
+══════════════════════════════════════════════════════ */
+const FRETS_MOBILE = 12;
+let isMobileMode = false;
+
+function toggleMobileMode(btn) {
+  isMobileMode = !isMobileMode;
+  document.body.classList.toggle('mobile-mode', isMobileMode);
+  btn.classList.toggle('active', isMobileMode);
+  // Rebuild les deux manches avec le bon nombre de frettes
+  mobRebuildBoard('m');
+  mobRebuildBoard('gm');
+}
+
+// Recrée un manche avec le nombre de frettes donné et un décalage optionnel
+// offset=3 → affiche les frettes 4 à 15 au lieu de 1 à 12
+function mobRebuildBoard(prefix, fretsOverride, offset) {
+  const frets = fretsOverride !== undefined ? fretsOverride : (isMobileMode ? FRETS_MOBILE : FRETS);
+  const fretOffset = offset || 0; // décalage : fret affichée = index + fretOffset
+  const boardId = prefix === 'm' ? 'm-board' : 'gm-board';
+  const board = document.getElementById(boardId);
+  if (!board) return;
+
+  // Sauvegarde l'état des cellules sélectionnées
+  const selectedFrets = new Set();
+  const cells = prefix === 'm' ? mCells : gmCells;
+  cells.forEach(c => {
+    if (c.dataset.selected === 'true') {
+      selectedFrets.add(c.dataset.strIdx + '-' + c.dataset.fret);
+    }
+  });
+
+  board.innerHTML = '';
+  board.style.gridTemplateColumns = `40px repeat(${frets}, 1fr)`;
+  const newCells = [];
+
+  board.appendChild(Object.assign(document.createElement('div'), {style:'height:26px'}));
+  for (let i = 1; i <= frets; i++) {
+    const realFret = i + fretOffset;
+    const h = document.createElement('div');
+    h.className = 'gheader'; h.textContent = realFret;
+    board.appendChild(h);
+  }
+
+  STRINGS.forEach((s, si) => {
+    const lbl = document.createElement('div');
+    lbl.className = 'gstring'; lbl.textContent = s;
+    board.appendChild(lbl);
+    for (let i = 1; i <= frets; i++) {
+      const realFret = i + fretOffset;
+      const c = document.createElement('div');
+      c.className = 'gcell';
+      c.dataset.chromatic = (NOTES_SHARP.indexOf(s) + realFret) % 12;
+      c.dataset.fret    = realFret;
+      c.dataset.strIdx  = si;
+      c.dataset.selected = selectedFrets.has(si + '-' + realFret) ? 'true' : 'false';
+      if (c.dataset.selected === 'true') c.classList.add('selected');
+      if (prefix === 'm') {
+        c.onclick = () => { if (!mQuizMode) mToggle(c); else mQuizClick(c); };
+      } else {
+        c.onclick = () => { if (gmWalkMode) return; if (!gmQuizMode) gmToggle(c); else gmQuizClick(c); };
+      }
+      board.appendChild(c);
+      newCells.push(c);
+    }
+  });
+
+  // Remplace le tableau de cellules du module
+  if (prefix === 'm') {
+    mCells.length = 0; newCells.forEach(c => mCells.push(c));
+    mApplyFilters();
+  } else {
+    gmCells.length = 0; newCells.forEach(c => gmCells.push(c));
+    gmApplyFilters();
+    // Réapplique le preview penta si actif
+    if (gmWalkMode === false) {
+      const panel = document.getElementById('gm-walk-panel');
+      if (panel && panel.style.display !== 'none') {
+        const isPenta = gmCurrentMode === 'penta_major' || gmCurrentMode === 'penta_minor';
+        if (isPenta) gmWalkPreviewPosition(gmWalkPentaPosIdx);
+      }
+    }
+  }
+}
+
+// Calcule la plage frettes d'une position penta transposée
+// (réutilise gmGetPentaPosition pour être 100% cohérent)
+function mobGetPentaFretRange(mode, posIdx) {
+  const seq = gmGetPentaPosition(mode, posIdx);
+  const frets = seq.map(s => s.fret);
+  return { min: Math.min(...frets), max: Math.max(...frets) };
+}
+
+// Hook sur gmBuildPentaPosBtns : en mode mobile, affiche la plage dans le hint
+// On patch le onclick des boutons après que gmBuildPentaPosBtns a fait son travail
+const _origGmBuildPentaPosBtns = gmBuildPentaPosBtns;
+gmBuildPentaPosBtns = function() {
+  _origGmBuildPentaPosBtns();
+  if (!isMobileMode) return;
+  // Ajoute le comportement mobile sur chaque bouton de position
+  const div = document.getElementById('gm-walk-pos-btns');
+  if (!div) return;
+  div.querySelectorAll('.pos-btn').forEach((btn, i) => {
+    const origOnclick = btn.onclick;
+    btn.onclick = () => {
+      origOnclick && origOnclick.call(btn);
+      mobUpdatePentaFretHint(i);
+    };
+  });
+  // Affiche le hint pour la position active par défaut (pos 0)
+  mobUpdatePentaFretHint(0);
+};
+
+function mobUpdatePentaFretHint(posIdx) {
+  const hint = document.getElementById('mob-penta-fret-hint');
+  if (!hint) return;
+  const { min, max } = mobGetPentaFretRange(gmCurrentMode, posIdx);
+  hint.textContent = '📍 Frettes ' + min + ' à ' + max;
+  // Si la position dépasse la frette 12, décaler le début du manche
+  // pour toujours afficher 12 frettes et inclure toute la position
+  const offset = max > FRETS_MOBILE ? max - FRETS_MOBILE : 0;
+  mobRebuildBoard('gm', FRETS_MOBILE, offset);
+  // Réapplique le preview jaune sur les cases de la position
+  gmWalkPreviewPosition(posIdx);
+}
 </script>
 </body>
 </html>
