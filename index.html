@@ -473,7 +473,13 @@ body.mobile-mode .gstring { height: 48px; font-size: 14px; width: 36px; }
 body.mobile-mode .board-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 body.mobile-mode .board { min-width: max-content; width: max-content; }
 body.mobile-mode .board .gcell { min-width: 40px; }
-body.mobile-mode .chromatic-wheel { width: 280px; height: 280px; }
+body.mobile-mode .chromatic-wheel-wrap { padding: 0; }
+body.mobile-mode .chromatic-wheel {
+  width: 320px; height: 320px;
+  transform: scale(0.875);
+  transform-origin: center center;
+  margin: -20px auto;
+}
 body.mobile-mode .pill { padding: 8px 14px; font-size: 14px; }
 body.mobile-mode .btn  { padding: 12px 18px; font-size: 15px; min-height: 44px; }
 body.mobile-mode .btn-row { gap: 10px; }
